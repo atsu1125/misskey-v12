@@ -21,20 +21,20 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bull-board/api@6.3.3":
-  version "6.3.3"
-  resolved "https://registry.yarnpkg.com/@bull-board/api/-/api-6.3.3.tgz#e8ff853901cc8abb2429c1a7fbdbe560544586c3"
-  integrity sha512-HtdFE53zC0o5QyYR7u0j+R06Iid6USZatai+s4scDlmanLh2/Ic+8zkzMcHGOM8urC2g49EasOMXB5eBXp9lnA==
+"@bull-board/api@6.5.4":
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/@bull-board/api/-/api-6.5.4.tgz#2e581c943283b0a26199b4ac72c345ebeeac4e1a"
+  integrity sha512-5EFs4lSzfTf/TUMOKaADjSVyJAnP9/jJw0TAW2NBD+LzxjJCSpqN8y3vxoQo1vnKCf/iiLS6wwSRNDObNDz1XA==
   dependencies:
     redis-info "^3.0.8"
 
-"@bull-board/koa@6.3.3":
-  version "6.3.3"
-  resolved "https://registry.yarnpkg.com/@bull-board/koa/-/koa-6.3.3.tgz#55e0f7364020b26928cdd1174bfcb90d56fbcad1"
-  integrity sha512-nADw8Ok6sN2hhu40weR1u+iycgZr07DO1IeKDSWxZM9Mvy0JAjrTUY5U8y5/mIvJsxxd6Xe02Zl1jcBulWIyIg==
+"@bull-board/koa@6.5.4":
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/@bull-board/koa/-/koa-6.5.4.tgz#a20c328f38159beee9e84a035257ff74ed1956b5"
+  integrity sha512-WUQoEQErsA4J3t++cheR9P1u0WqLe5f7ESnDhElven4sZH036ZZe6QoxDU1NIURmAw5edQ3XIAIlWhlltdrUUQ==
   dependencies:
-    "@bull-board/api" "6.3.3"
-    "@bull-board/ui" "6.3.3"
+    "@bull-board/api" "6.5.4"
+    "@bull-board/ui" "6.5.4"
     "@koa/bodyparser" "^5.1.1"
     ejs "^3.1.10"
     koa "^2.15.3"
@@ -43,12 +43,12 @@
     koa-static "^5.0.0"
     koa-views "^8.1.0"
 
-"@bull-board/ui@6.3.3":
-  version "6.3.3"
-  resolved "https://registry.yarnpkg.com/@bull-board/ui/-/ui-6.3.3.tgz#f69976d200fb5a48cc40e08a0947809651e2a96e"
-  integrity sha512-5tEJUQyw0ezTKlG8Kko0S4kVQE0a1OfyUUy7VciiXlVW8D3mvPgm2r628iBB9x/aDJPf6QSu3xyAva49eoROZA==
+"@bull-board/ui@6.5.4":
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/@bull-board/ui/-/ui-6.5.4.tgz#5d7811864a54f75939b8184314272b1889c2bb18"
+  integrity sha512-5K39CaJk+p5fyckXI0jAc9lVJZAJ+tkj8wlyv8X3qszO6jKg/rYE20HaNgUOIBpQK9yQQDwgaxpip767svjnVQ==
   dependencies:
-    "@bull-board/api" "6.3.3"
+    "@bull-board/api" "6.5.4"
 
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
