@@ -13,6 +13,10 @@ export function isValidUrl(url: string | URL | undefined): boolean {
 			return false;
 		}
 
+		if (u.username || u.password) {
+			return false;
+		}
+
 		return true;
 	} catch {
 		return false;
