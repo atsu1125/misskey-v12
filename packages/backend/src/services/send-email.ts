@@ -21,7 +21,7 @@ export async function sendEmail(to: string, subject: string, html: string, text:
 
 	if (meta.blockedEmailDomains.some(x => domain.endsWith(x))) {
 		logger.error(`Blocked Email Domain: ${domain}`);
-		throw err;
+		return;
 	}
 
 	const transporter = nodemailer.createTransport({
