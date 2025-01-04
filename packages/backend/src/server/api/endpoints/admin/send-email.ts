@@ -1,5 +1,5 @@
 import define from '../../define.js';
-import { sendEmail } from '@/services/send-email.js';
+import { emailDeliver } from '@/queue/index.js';
 
 export const meta = {
 	tags: ['admin'],
@@ -20,5 +20,5 @@ export const paramDef = {
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps) => {
-	await sendEmail(ps.to, ps.subject, ps.text, ps.text);
+	await emailDeliver(ps.to, ps.subject, ps.text, ps.text);
 });
