@@ -2,9 +2,10 @@ import Koa from 'koa';
 
 import config from '@/config/index.js';
 import { ILocalUser } from '@/models/entities/user.js';
-import { Signins } from '@/models/index.js';
+import { Signins, UserProfiles } from '@/models/index.js';
 import { genId } from '@/misc/gen-id.js';
 import { publishMainStream } from '@/services/stream.js';
+import { emailDeliver } from '@/queue/index.js';
 
 export default function(ctx: Koa.Context, user: ILocalUser, redirect = false) {
 	if (redirect) {
@@ -28,6 +29,22 @@ export default function(ctx: Koa.Context, user: ILocalUser, redirect = false) {
 	}
 
 	(async () => {
+		const signinUserProfile = await UserProfiles.findOneBy({
+			userId: user.id,
+		});
+
+		if (signinUserProfile.email && signinUserProfile.emailVerified && signinUserProfile.receiveAnnouncementEmail) {
+			const userSigninFromIpExists = await Signins.findOneBy({
+				userId: user.id,
+				ip: ctx.ip,
+			});
+			if (!userSigninFromIpExists) {
+				emailDeliver(signinUserProfile.email, 'New login / ログインがありました',
+					'There is a new login. If you do not recognize this login, update the security status of your account, including changing your password. / 新しいログインがありました。このログインに心当たりがない場合は、パスワードを変更するなど、アカウントのセキュリティ状態を更新してください。',
+					'There is a new login. If you do not recognize this login, update the security status of your account, including changing your password. / 新しいログインがありました。このログインに心当たりがない場合は、パスワードを変更するなど、アカウントのセキュリティ状態を更新してください。');
+			}
+		}
+
 		// Append signin history
 		const record = await Signins.insert({
 			id: genId(),
