@@ -180,6 +180,10 @@ export default async (user: { id: User['id']; username: User['username']; host: 
 				if (data.visibility === 'public' || data.visibility === 'home') {
 					data.visibility = 'followers';
 				}
+				// Backward compatibility
+				if (Users.isLocalUser(user) && data.visibility === 'specified') {
+					data.localOnly = true;
+				}
 				break;
 			case 'specified':
 				// specified / direct noteはreject
