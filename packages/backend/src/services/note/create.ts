@@ -470,7 +470,7 @@ export default async (user: { id: User['id']; username: User['username']; host: 
 		});
 
 		//#region AP deliver
-		if (Users.isLocalUser(user)) {
+		if (!data.localOnly && Users.isLocalUser(user)) {
 			(async () => {
 				const noteActivity = await renderNoteOrRenoteActivity(data, note);
 
