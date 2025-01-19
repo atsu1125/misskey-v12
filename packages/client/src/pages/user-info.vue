@@ -352,8 +352,16 @@ async function toggleSuspend(v) {
 }
 
 async function toggleModerator(v) {
-	await os.api(v ? 'admin/moderators/add' : 'admin/moderators/remove', { userId: user.id });
-	await refreshUser();
+	const confirm = await os.confirm({
+		type: 'warning',
+		text: v ? i18n.ts.grantModeratorConfirm : i18n.ts.revokeModeratorConfirm,
+	});
+	if (confirm.canceled) {
+		moderator = !v;
+	} else {
+		await os.api(v ? 'admin/moderators/add' : 'admin/moderators/remove', { userId: user.id });
+		await refreshUser();
+	}
 }
 
 async function deleteAllFiles() {
