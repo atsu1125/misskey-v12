@@ -35,23 +35,18 @@ export async function uploadFromUrl({
 	requestIp = null,
 	requestHeaders = null,
 }: Args): Promise<DriveFile> {
-	let name = new URL(url).pathname.split('/').pop() || null;
-	if (name == null || !DriveFiles.validateFileName(name)) {
-		name = null;
-	}
-
-	// If the comment is same as the name, skip comment
-	// (image.name is passed in when receiving attachment)
-	if (comment !== null && name === comment) {
-		comment = null;
-	}
-
 	// Create temp file
 	const [path, cleanup] = await createTemp();
 
 	try {
 		// write content at URL to temp file
-		await downloadUrl(url, path);
+		const { filename: name } = await downloadUrl(url, path);
+
+		// If the comment is same as the name, skip comment
+		// (image.name is passed in when receiving attachment)
+		if (comment !== null && name === comment) {
+			comment = null;
+		}
 
 		const driveFile = await addFile({ user, path, name, comment, folderId, force, isLink, url, uri, sensitive, requestIp, requestHeaders });
 		logger.succ(`Got: ${driveFile.id}`);

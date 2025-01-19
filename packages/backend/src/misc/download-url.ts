@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as stream from 'node:stream';
 import * as util from 'node:util';
 import got, * as Got from 'got';
+import { parse } from 'content-disposition';
 import { getAgentByUrl, httpAgent, httpsAgent, StatusError } from './fetch.js';
 import config from '@/config/index.js';
 import chalk from 'chalk';
@@ -11,7 +12,9 @@ import { isValidUrl } from "./is-valid-url.js";
 
 const pipeline = util.promisify(stream.pipeline);
 
-export async function downloadUrl(url: string, path: string): Promise<void> {
+export async function downloadUrl(url: string, path: string): Promise<{
+		filename: string;
+	}> {
 	if (!isValidUrl(url)) {
 		throw new StatusError('Invalid URL', 400);
 	}
@@ -23,6 +26,9 @@ export async function downloadUrl(url: string, path: string): Promise<void> {
 	const timeout = 30 * 1000;
 	const operationTimeout = 60 * 1000;
 	const maxSize = config.maxFileSize || 262144000;
+
+	const urlObj = new URL(url);
+	let filename = urlObj.pathname.split('/').pop() ?? 'untitled';
 
 	const req = got
 		.stream(url, {
@@ -69,6 +75,17 @@ export async function downloadUrl(url: string, path: string): Promise<void> {
 				req.destroy();
 			}
 		}
+		const contentDisposition = res.headers['content-disposition'];
+		if (contentDisposition != null) {
+			try {
+				const parsed = parse(contentDisposition);
+				if (parsed.parameters.filename) {
+					filename = parsed.parameters.filename;
+				}
+			} catch (e) {
+				logger.warn(`Failed to parse content-disposition: ${contentDisposition}`, { stack: e });
+			}
+		}
 	}).on('downloadProgress', (progress: Got.Progress) => {
 		if (progress.transferred > maxSize) {
 			logger.warn(`maxSize exceeded (${progress.transferred} > ${maxSize}) on downloadProgress`);
@@ -87,6 +104,10 @@ export async function downloadUrl(url: string, path: string): Promise<void> {
 	}
 
 	logger.succ(`Download finished: ${chalk.cyan(url)}`);
+
+	return {
+		filename,
+	};
 }
 
 function isPrivateIp(ip: string): boolean {
