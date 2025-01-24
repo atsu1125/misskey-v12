@@ -6,6 +6,7 @@ import ms from 'ms';
 export const meta = {
 	tags: ['federation'],
 
+	requireAdmin: true,
 	requireCredential: true,
 
 	limit: {
