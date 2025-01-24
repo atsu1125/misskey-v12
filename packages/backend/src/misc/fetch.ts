@@ -1,11 +1,81 @@
 import * as http from 'node:http';
 import * as https from 'node:https';
+import * as net from 'node:net';
+import ipaddr from 'ipaddr.js';
 import { URL } from 'node:url';
 import CacheableLookup from 'cacheable-lookup';
 import fetch, { RequestRedirect } from 'node-fetch';
 import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
 import config from '@/config/index.js';
 import { isValidUrl } from './is-valid-url.js';
+
+class HttpRequestServiceAgent extends http.Agent {
+  constructor(private config: typeof config, options?: http.AgentOptions) {
+    super(options);
+  }
+
+  public createConnection(
+    options: net.NetConnectOpts,
+    callback?: (err: unknown, stream: net.Socket) => void
+  ): net.Socket {
+    const socket = super.createConnection(options, callback).on('connect', () => {
+      const address = socket.remoteAddress;
+      if (process.env.NODE_ENV === 'production' && address && ipaddr.isValid(address)) {
+        if (this.isPrivateIp(address)) {
+          socket.destroy(new Error(`Blocked address: ${address}`));
+        }
+      }
+    });
+    return socket;
+  }
+
+  private isPrivateIp(ip: string): boolean {
+    const parsedIp = ipaddr.parse(ip);
+
+    for (const net of config.allowedPrivateNetworks ?? []) {
+      const cidr = ipaddr.parseCIDR(net);
+      if (parsedIp.kind() === cidr[0].kind() && parsedIp.match(cidr)) {
+        return false;
+      }
+    }
+
+    return parsedIp.range() !== 'unicast';
+  }
+}
+
+class HttpsRequestServiceAgent extends https.Agent {
+  constructor(private config: typeof config, options?: https.AgentOptions) {
+    super(options);
+  }
+
+  public createConnection(
+    options: net.NetConnectOpts,
+    callback?: (err: unknown, stream: net.Socket) => void
+  ): net.Socket {
+    const socket = super.createConnection(options, callback).on('connect', () => {
+      const address = socket.remoteAddress;
+      if (process.env.NODE_ENV === 'production' && address && ipaddr.isValid(address)) {
+        if (this.isPrivateIp(address)) {
+          socket.destroy(new Error(`Blocked address: ${address}`));
+        }
+      }
+    });
+    return socket;
+  }
+
+  private isPrivateIp(ip: string): boolean {
+    const parsedIp = ipaddr.parse(ip);
+
+    for (const net of config.allowedPrivateNetworks ?? []) {
+      const cidr = ipaddr.parseCIDR(net);
+      if (parsedIp.kind() === cidr[0].kind() && parsedIp.match(cidr)) {
+        return false;
+      }
+    }
+
+    return parsedIp.range() !== 'unicast';
+  }
+}
 
 export async function getJson(url: string, accept = 'application/json, */*', timeout = 10000, headers?: Record<string, string>) {
 	const res = await getResponse({
@@ -85,23 +155,21 @@ const cache = new CacheableLookup({
 	lookup: false,	// nativeのdns.lookupにfallbackしない
 });
 
-/**
- * Get http non-proxy agent
- */
-const _http = new http.Agent({
+const agentOption = {
 	keepAlive: true,
 	keepAliveMsecs: 30 * 1000,
 	lookup: cache.lookup,
-} as http.AgentOptions);
+};
+
+/**
+ * Get http non-proxy agent
+ */
+const _http = new HttpRequestServiceAgent(config, agentOption);
 
 /**
  * Get https non-proxy agent
  */
-const _https = new https.Agent({
-	keepAlive: true,
-	keepAliveMsecs: 30 * 1000,
-	lookup: cache.lookup,
-} as https.AgentOptions);
+const _https = new HttpsRequestServiceAgent(config, agentOption);
 
 const maxSockets = Math.max(256, config.deliverJobConcurrency || 128);
 
