@@ -5,7 +5,7 @@ import { createNote } from '@/remote/activitypub/models/note.js';
 import DbResolver from '@/remote/activitypub/db-resolver.js';
 import Resolver from '@/remote/activitypub/resolver.js';
 import { ApiError } from '../../error.js';
-import { extractDbHost } from '@/misc/convert-host.js';
+import { extractDbHost, isSelfHost } from '@/misc/convert-host.js';
 import { Users, Notes } from '@/models/index.js';
 import { Note } from '@/models/entities/note.js';
 import { CacheableLocalUser, User } from '@/models/entities/user.js';
@@ -102,6 +102,11 @@ async function fetchAny(uri: string, me: CacheableLocalUser | null | undefined):
 		dbResolver.getNoteFromApId(uri),
 	]));
 	if (local != null) return local;
+
+	const host = extractDbHost(uri);
+
+	// local object, not found in db? fail
+	if (isSelfHost(host)) return null;
 
 	// リモートから一旦オブジェクトフェッチ
 	const resolver = new Resolver();
