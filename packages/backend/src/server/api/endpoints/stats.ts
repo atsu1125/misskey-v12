@@ -52,23 +52,16 @@ export const paramDef = {
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async () => {
-	const [
-		notesCount,
-		originalNotesCount,
-		usersCount,
-		originalUsersCount,
-		reactionsCount,
-		//originalReactionsCount,
-		instances,
-	] = await Promise.all([
-		Notes.count({ cache: 3600000 }), // 1 hour
-		Notes.count({ where: { userHost: IsNull() }, cache: 3600000 }),
-		Users.count({ cache: 3600000 }),
-		Users.count({ where: { host: IsNull() }, cache: 3600000 }),
-		NoteReactions.count({ cache: 3600000 }), // 1 hour
-		//NoteReactions.count({ where: { userHost: IsNull() }, cache: 3600000 }),
-		Instances.count({ cache: 3600000 }),
-	]);
+	const notesCount = await Notes.count({ cache: 3600000 }); // 1 hour
+	const originalNotesCount = await Notes.count({ where: { userHost: IsNull() }, cache: 3600000 });
+	const usersCount = await Users.count({ cache: 3600000 });
+	const originalUsersCount = await Users.count({ where: { host: IsNull() }, cache: 3600000 });
+	const reactionsCount = await NoteReactions.count({ cache: 3600000 }); // 1 hour
+	// const originalReactionsCount = await NoteReactions.count({
+	//     where: { userHost: IsNull() },
+	//     cache: 3600000
+	// });
+	const instances = await Instances.count({ cache: 3600000 });
 
 	return {
 		notesCount,

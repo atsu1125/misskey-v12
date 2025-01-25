@@ -21,19 +21,11 @@ export const links = [/* (awaiting release) {
 
 const nodeinfo2 = async () => {
 	const now = Date.now();
-	const [
-		meta,
-		total,
-		activeHalfyear,
-		activeMonth,
-		localPosts,
-	] = await Promise.all([
-		fetchMeta(true),
-		Users.count({ where: { host: IsNull() } }),
-		Users.count({ where: { host: IsNull(), lastActiveDate: MoreThan(new Date(now - 15552000000)) } }),
-		Users.count({ where: { host: IsNull(), lastActiveDate: MoreThan(new Date(now - 2592000000)) } }),
-		Notes.count({ where: { userHost: IsNull() } }),
-	]);
+	const meta = await fetchMeta(true);
+	const total = await Users.count({ where: { host: IsNull() } });
+	const activeHalfyear = await Users.count({ where: { host: IsNull(), lastActiveDate: MoreThan(new Date(now - 15552000000)) } });
+	const activeMonth = await Users.count({ where: { host: IsNull(), lastActiveDate: MoreThan(new Date(now - 2592000000)) } });
+	const localPosts = await Notes.count({ where: { userHost: IsNull() } });
 
 	const proxyAccount = meta.proxyAccountId ? await Users.pack(meta.proxyAccountId).catch(() => null) : null;
 
