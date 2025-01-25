@@ -162,6 +162,17 @@ const agentOption = {
 };
 
 /**
+ * Get http non-proxy agent (without local address filtering)
+ */
+
+const httpNative = new http.Agent(agentOption);
+
+/**
+ * Get https non-proxy agent (without local address filtering)
+ */
+const httpsNative = new https.Agent(agentOption);
+
+/**
  * Get http non-proxy agent
  */
 const _http = new HttpRequestServiceAgent(config, agentOption);
@@ -206,10 +217,16 @@ export const httpsAgent = config.proxy
  * @param url URL
  * @param bypassProxy Allways bypass proxy
  */
-export function getAgentByUrl(url: URL, bypassProxy = false) {
+export function getAgentByUrl(url: URL, bypassProxy = false, isLocalAddressAllowed = false) {
 	if (bypassProxy || (config.proxyBypassHosts || []).includes(url.hostname)) {
+    if (isLocalAddressAllowed) {
+      return url.protocol === 'http:' ? httpNative : httpsNative;
+    }
 		return url.protocol === 'http:' ? _http : _https;
 	} else {
+    if (isLocalAddressAllowed && (!config.proxy)) {
+      return url.protocol === 'http:' ? httpNative : httpsNative;
+    }
 		return url.protocol === 'http:' ? httpAgent : httpsAgent;
 	}
 }
