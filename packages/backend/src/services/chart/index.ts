@@ -44,9 +44,9 @@ const charts = [
 
 // 20分おきにメモリ情報をDBに書き込み
 const chartCommitInterval = config.chartCommitIntervalSecond * 1000 || 1000 * 60 * 20;
-setInterval(() => {
+setInterval(async () => {
 	for (const chart of charts) {
-		chart.save();
+		await chart.save();
 	}
 }, chartCommitInterval);
 

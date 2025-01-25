@@ -8,20 +8,18 @@ const logger = queueLogger.createSubLogger('clean-charts');
 export async function cleanCharts(job: Bull.Job<Record<string, unknown>>, done: any): Promise<void> {
 	logger.info(`Clean charts...`);
 
-	await Promise.all([
-		federationChart.clean(),
-		notesChart.clean(),
-		usersChart.clean(),
-		activeUsersChart.clean(),
-		instanceChart.clean(),
-		perUserNotesChart.clean(),
-		driveChart.clean(),
-		perUserReactionsChart.clean(),
-		hashtagChart.clean(),
-		perUserFollowingChart.clean(),
-		perUserDriveChart.clean(),
-		apRequestChart.clean(),
-	]);
+	await federationChart.clean(),
+	await notesChart.clean(),
+	await usersChart.clean(),
+	await activeUsersChart.clean(),
+	await instanceChart.clean(),
+	await perUserNotesChart.clean(),
+	await driveChart.clean(),
+	await perUserReactionsChart.clean(),
+	await hashtagChart.clean(),
+	await perUserFollowingChart.clean(),
+	await perUserDriveChart.clean(),
+	await apRequestChart.clean(),
 
 	logger.succ(`All charts successfully cleaned.`);
 	done();

@@ -10,11 +10,9 @@ export async function resyncCharts(job: Bull.Job<Record<string, unknown>>, done:
 
 	// TODO: ユーザーごとのチャートも更新する
 	// TODO: インスタンスごとのチャートも更新する
-	await Promise.all([
-		driveChart.resync(),
-		notesChart.resync(),
-		usersChart.resync(),
-	]);
+	await driveChart.resync(),
+	await notesChart.resync(),
+	await usersChart.resync(),
 
 	logger.succ(`All charts successfully resynced.`);
 	done();
