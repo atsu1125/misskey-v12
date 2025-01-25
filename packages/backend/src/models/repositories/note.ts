@@ -2,7 +2,7 @@ import { In } from 'typeorm';
 import * as mfm from 'mfm-js';
 import { Note } from '@/models/entities/note.js';
 import { User } from '@/models/entities/user.js';
-import { Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls, Channels } from '../index.js';
+import { Users, PollVotes, DriveFiles, NoteReactions, Followings, Polls, Channels, Blockings } from '../index.js';
 import { Packed } from '@/misc/schema.js';
 import { nyaize } from '@/misc/nyaize.js';
 import { awaitAll } from '@/prelude/await-all.js';
@@ -138,6 +138,18 @@ async function populateMyReaction(note: Note, meId: User['id'], _hint_?: {
 export const NoteRepository = db.getRepository(Note).extend({
 	async isVisibleForMe(note: Note, meId: User['id'] | null): Promise<boolean> {
 		// This code must always be synchronized with the checks in generateVisibilityQuery.
+		if (meId != null && meId !== note.userId) {
+			const blocked = await Blockings.count({
+				where: {
+					blockeeId: meId,
+					blockerId: note.userId
+				},
+				take: 1
+			});
+			if (blocked !== 0) {
+				return false;
+			}
+		}
 		// visibility が specified かつ自分が指定されていなかったら非表示
 		if (note.visibility === 'specified') {
 			if (meId == null) {
