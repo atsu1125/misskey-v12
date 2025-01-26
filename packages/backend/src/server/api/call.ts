@@ -68,6 +68,15 @@ export default async (endpoint: string, user: CacheableLocalUser | null | undefi
 		});
 	}
 
+	if (ep.meta.requireCredential && user!.isSuspended && user!.isDeleted) {
+		throw new ApiError({
+			message: 'Your account has been deleted.',
+			code: 'YOUR_ACCOUNT_DELETED',
+			id: '4b30119d-3273-5ac1-8027-f9531ee3e525',
+			httpStatusCode: 404,
+		});
+	}
+
 	if (ep.meta.requireCredential && user!.isSuspended) {
 		throw new ApiError({
 			message: 'Your account has been suspended.',
