@@ -21,17 +21,8 @@ import { Users } from '@/models/index.js';
 
 export async function performActivity(actor: CacheableRemoteUser, activity: IObject) {
 	if (isCollectionOrOrderedCollection(activity)) {
-		const resolver = new Resolver();
-		for (const item of toArray(isCollection(activity) ? activity.items : activity.orderedItems)) {
-			const act = await resolver.resolve(item);
-			try {
-				await performOneActivity(actor, act);
-			} catch (err) {
-				if (err instanceof Error || typeof err === 'string') {
-					apLogger.error(err);
-				}
-			}
-		}
+		apLogger.debug('Refusing to ingest collection as activity');
+		return;
 	} else {
 		await performOneActivity(actor, activity);
 	}
