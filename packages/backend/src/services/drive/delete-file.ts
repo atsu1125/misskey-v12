@@ -7,6 +7,7 @@ import { fetchMeta } from '@/misc/fetch-meta.js';
 import { getS3 } from './s3.js';
 import { v4 as uuid } from 'uuid';
 import { IsNull } from 'typeorm';
+import config from '@/config/index.js';
 
 export async function deleteFile(file: DriveFile, isExpired = false) {
 	if (file.webpublicUrl != null) {
@@ -143,8 +144,10 @@ export async function deleteObjectStorageFile(key: string) {
 
 	const s3 = getS3(meta);
 
+	const s3bucket = config.enableS3Override ? config.s3!.bucket! : meta.objectStorageBucket!;
+
 	await s3.deleteObject({
-		Bucket: meta.objectStorageBucket!,
+		Bucket: s3bucket!,
 		Key: key,
 	}).promise();
 }

@@ -8,6 +8,7 @@ import { DriveFiles, Users } from '@/models/index.js';
 import { truncate } from '@/misc/truncate.js';
 import { DB_MAX_IMAGE_COMMENT_LENGTH } from '@/misc/hard-limits.js';
 import { isDocument } from '../type.js';
+import config from '@/config/index.js';
 
 const logger = apLogger;
 
@@ -32,12 +33,14 @@ export async function createImage(actor: CacheableRemoteUser, value: any): Promi
 
 	const instance = await fetchMeta();
 
+	const shouldlink = config.enableS3Override ? true : !instance.cacheRemoteFiles;
+
 	let file = await uploadFromUrl({
 		url: image.url,
 		user: actor,
 		uri: image.url,
 		sensitive: image.sensitive,
-		isLink: !instance.cacheRemoteFiles,
+		isLink: shouldlink,
 		comment: truncate(image.name, DB_MAX_IMAGE_COMMENT_LENGTH)
 	});
 

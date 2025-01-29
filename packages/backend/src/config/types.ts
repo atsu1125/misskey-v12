@@ -32,6 +32,22 @@ export type Source = {
 		pass?: string;
 		index?: string;
 	};
+	s3?: {
+		enableS3: boolean;
+		baseUrl: string;
+		bucket: string;
+		prefix: string;
+		endpoint: string;
+		region?: string;
+		useSSL: boolean;
+		accessKey: string;
+		secretKey: string;
+		options: {
+			setPublicRead?: boolean;
+			forcePathStyle?: boolean;
+			useProxy?: boolean;
+		};
+	};
 
 	proxy?: string;
 	proxySmtp?: string;
@@ -71,6 +87,7 @@ export type Source = {
 	chartCommitIntervalSecond?: number;
 	disableChartsForRemoteUser?: boolean;
 	disableUrlPreview?: boolean;
+	enableS3Override?: boolean;
 };
 
 /**
