@@ -7,6 +7,10 @@ let canPlay = true;
 export async function loadAudio(file: string, useCache = true) {
 	if (ctx == null) {
 		ctx = new AudioContext();
+
+		window.addEventListener('beforeunload', () => {
+			ctx.close();
+		});
 	}
 	if (useCache && cache.has(file)) {
 		return cache.get(file)!;
