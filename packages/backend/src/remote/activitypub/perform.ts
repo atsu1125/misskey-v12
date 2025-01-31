@@ -10,6 +10,7 @@ export default async (actor: CacheableRemoteUser, activity: IObject): Promise<vo
 	if (actor.uri) {
 		if (actor.lastFetchedAt == null || Date.now() - actor.lastFetchedAt.getTime() > 1000 * 60 * 60 * 24) {
 			setImmediate(() => {
+				// 同一ユーザーの情報を再度処理するので、使用済みのresolverを再利用してはいけない
 				updatePerson(actor.uri!);
 			});
 		}

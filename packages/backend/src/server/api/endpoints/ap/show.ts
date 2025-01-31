@@ -122,6 +122,8 @@ async function fetchAny(uri: string, me: CacheableLocalUser | null | undefined):
 		if (local != null) return local;
 	}
 
+	// 同一ユーザーの情報を再度処理するので、使用済みのresolverを再利用してはいけない
+
 	return await mergePack(
 		me,
 		isActor(object) ? await createPerson(getApId(object)) : null,
