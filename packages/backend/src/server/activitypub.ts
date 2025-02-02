@@ -14,7 +14,7 @@ import Following from './activitypub/following.js';
 import Featured from './activitypub/featured.js';
 import { inbox as processInbox } from '@/queue/index.js';
 import { isSelfHost } from '@/misc/convert-host.js';
-import { Notes, Users, Emojis, NoteReactions } from '@/models/index.js';
+import { Notes, Users, Emojis, NoteReactions, FollowRequests } from '@/models/index.js';
 import { ILocalUser, User } from '@/models/entities/user.js';
 import { In, IsNull, Not } from 'typeorm';
 import { renderLike } from '@/remote/activitypub/renderer/like.js';
@@ -337,7 +337,7 @@ router.get('/likes/:like', async ctx => {
 });
 
 // follow
-router.get('/follows/:follower/:followee', async ctx => {
+router.get("/follows/:follower/:followee", async (ctx: Router.RouterContext) => {
 	// This may be used before the follow is completed, so we do not
 	// check if the following exists.
 
@@ -359,6 +359,38 @@ router.get('/follows/:follower/:followee', async ctx => {
 
 	ctx.body = renderActivity(renderFollow(follower, followee));
 	ctx.set('Cache-Control', 'public, max-age=180');
+	setResponseType(ctx);
+});
+
+// follow request
+router.get("/follows/:followRequestId", async (ctx: Router.RouterContext) => {
+	const followRequest = await FollowRequests.findOneBy({
+		id: ctx.params.followRequestId,
+	});
+
+	if (followRequest == null) {
+		ctx.status = 404;
+		return;
+	}
+
+	const [follower, followee] = await Promise.all([
+		Users.findOneBy({
+			id: followRequest.followerId,
+			host: IsNull(),
+		}),
+		Users.findOneBy({
+			id: followRequest.followeeId,
+			host: Not(IsNull()),
+		}),
+	]);
+
+	if (follower == null || followee == null) {
+		ctx.status = 404;
+		return;
+	}
+
+	ctx.set("Cache-Control", "public, max-age=180");
+	ctx.body = renderActivity(renderFollow(follower, followee));
 	setResponseType(ctx);
 });
 

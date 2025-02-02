@@ -6,6 +6,7 @@ import { User } from '@/models/entities/user.js';
 import { Blockings, FollowRequests, Users } from '@/models/index.js';
 import { genId } from '@/misc/gen-id.js';
 import { createNotification } from '../../create-notification.js';
+import config from "@/config/index.js";
 
 export default async function(follower: { id: User['id']; host: User['host']; uri: User['host']; inbox: User['inbox']; sharedInbox: User['sharedInbox']; }, followee: { id: User['id']; host: User['host']; uri: User['host']; inbox: User['inbox']; sharedInbox: User['sharedInbox']; }, requestId?: string) {
 	if (follower.id === followee.id) return;
@@ -63,7 +64,7 @@ export default async function(follower: { id: User['id']; host: User['host']; ur
 	}
 
 	if (Users.isLocalUser(follower) && Users.isRemoteUser(followee)) {
-		const content = renderActivity(renderFollow(follower, followee));
+		const content = renderActivity(renderFollow(follower, followee, requestId ?? `${config.url}/follows/${followRequest.id}`));
 		deliver(follower, content, followee.inbox);
 	}
 }
