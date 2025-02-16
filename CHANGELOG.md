@@ -8,6 +8,16 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.5 (2025/02/16)
+### Improvements
+- Node 18.20.6 @atsu1125
+- bull-board to 6.7.7 @atsu1125
+
+### Bugfixes
+- koa from 2.13.4 to 2.15.4 @atsu1125
+- bump sharp from 0.29.3 to 0.32.6 @atsu1125
+- Cookieの属性を修正、サインアウト時に削除、送信する最小限のパス指定 @nexryai @atsu1125
+
 ## 12.119.2-fix.7.4 (2025/01/31)
 ### Improvements
 - URLプレビューを無効化できるように @atsu1125
