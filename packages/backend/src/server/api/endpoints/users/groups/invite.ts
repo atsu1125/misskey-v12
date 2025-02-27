@@ -1,4 +1,4 @@
-import { UserGroups, UserGroupJoinings, UserGroupInvitations } from '@/models/index.js';
+import { Users, UserGroups, UserGroupJoinings, UserGroupInvitations } from '@/models/index.js';
 import { genId } from '@/misc/gen-id.js';
 import { UserGroupInvitation } from '@/models/entities/user-group-invitation.js';
 import { createNotification } from '@/services/create-notification.js';
@@ -68,6 +68,10 @@ export default define(meta, paramDef, async (ps, me) => {
 		if (e.id === '15348ddd-432d-49c2-8a5a-8069753becff') throw new ApiError(meta.errors.noSuchUser);
 		throw e;
 	});
+
+	if (Users.isRemoteUser(user)) {
+		throw new ApiError(meta.errors.noSuchUser);
+	}
 
 	const joining = await UserGroupJoinings.findOneBy({
 		userGroupId: userGroup.id,
