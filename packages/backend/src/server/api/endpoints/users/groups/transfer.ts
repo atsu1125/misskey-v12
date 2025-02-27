@@ -1,4 +1,4 @@
-import { UserGroups, UserGroupJoinings } from '@/models/index.js';
+import { Users, UserGroups, UserGroupJoinings } from '@/models/index.js';
 import define from '../../../define.js';
 import { ApiError } from '../../../error.js';
 import { getUser } from '../../../common/getters.js';
@@ -65,6 +65,10 @@ export default define(meta, paramDef, async (ps, me) => {
 		if (e.id === '15348ddd-432d-49c2-8a5a-8069753becff') throw new ApiError(meta.errors.noSuchUser);
 		throw e;
 	});
+
+	if (Users.isRemoteUser(user)) {
+		throw new ApiError(meta.errors.noSuchUser);
+	}
 
 	const joining = await UserGroupJoinings.findOneBy({
 		userGroupId: userGroup.id,
