@@ -4,6 +4,7 @@ import { getUser } from '../../common/getters.js';
 import { ApiError } from '../../error.js';
 import define from '../../define.js';
 import { createReportAbuseJob } from '@/queue/index.js';
+import ms from 'ms';
 
 export const meta = {
 	tags: ['users'],
@@ -11,6 +12,12 @@ export const meta = {
 	requireCredential: true,
 
 	description: 'File a report.',
+
+	limit: {
+		duration: ms('30min'),
+		max: 10,
+		minInterval: ms('30sec'),
+	},
 
 	errors: {
 		noSuchUser: {
