@@ -10,6 +10,7 @@ import { addFile } from '@/services/drive/add-file.js';
 import { genId } from '@/misc/gen-id.js';
 import { db } from '@/db/postgre.js';
 import { queueLogger } from '../../logger.js';
+import { IsNull } from 'typeorm';
 
 const logger = queueLogger.createSubLogger('import-custom-emojis');
 
@@ -58,6 +59,7 @@ export async function importCustomEmojis(job: Bull.Job<DbUserImportJobData>, don
 			const emojiPath = outputPath + '/' + record.fileName;
 			await Emojis.delete({
 				name: emojiInfo.name,
+				host: IsNull(),
 			});
 			const driveFile = await addFile({ user: null, path: emojiPath, name: record.fileName, force: true });
 			const emoji = await Emojis.insert({
