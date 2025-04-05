@@ -402,21 +402,6 @@ export const packedMeDetailedOnlySchema = {
 				nullable: false, optional: false,
 			},
 		},
-		twoFactorEnabled: {
-			type: 'boolean',
-			nullable: false, optional: false,
-			default: false,
-		},
-		usePasswordLessLogin: {
-			type: 'boolean',
-			nullable: false, optional: false,
-			default: false,
-		},
-		securityKeys: {
-			type: 'boolean',
-			nullable: false, optional: false,
-			default: false,
-		},
 		//#region secrets
 		email: {
 			type: 'string',
