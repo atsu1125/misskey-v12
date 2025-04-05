@@ -8,6 +8,17 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.6 (2025/04/05)
+### Improvements
+- Node 18.20.8 @atsu1125
+
+### Bugfixes
+- S3_SAFEかつURL_SAFEでない文字列をprefixに使えないように @1673beta
+- リモートユーザーはグループに招待できないのでエラーを返すように @atsu1125
+- ノートを削除するときにリノートかリプライしたリモートユーザーのインスタンスにも配送するように @zyoshoka @atsu1125
+- 通報のAPIリミット @atsu1125
+- 2段階認証を有効化しているとログインできない問題を修正 @atsu1125
+
 ## 12.119.2-fix.7.5 (2025/02/16)
 ### Improvements
 - Node 18.20.6 @atsu1125
