@@ -50,6 +50,7 @@ export default define(meta, paramDef, async (ps, me) => {
 			isSilenced: user.isSilenced,
 			isSuspended: user.isSuspended,
 			emailVerified: profile.emailVerified,
+			moderationNote: profile.moderationNote,
 			capacity: capacity,
 			usage: usage,
 		};
