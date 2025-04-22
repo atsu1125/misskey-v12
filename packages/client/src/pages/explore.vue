@@ -59,6 +59,7 @@ watch(() => props.tag, () => {
 const searchPagination = {
 	endpoint: 'users/search' as const,
 	limit: 10,
+	offsetMode: true,
 	params: computed(() => (searchQuery && searchQuery !== '') ? {
 		query: searchQuery,
 		origin: searchOrigin,
