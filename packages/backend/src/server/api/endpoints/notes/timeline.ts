@@ -1,5 +1,5 @@
 import { Brackets } from 'typeorm';
-import { Notes, Followings } from '@/models/index.js';
+import { Notes, Followings, ChannelFollowings } from '@/models/index.js';
 import { activeUsersChart } from '@/services/chart/index.js';
 import define from '../../define.js';
 import { makePaginationQuery } from '../../common/make-pagination-query.js';
@@ -55,16 +55,28 @@ export default define(meta, paramDef, async (ps, user) => {
 		take: 1,
 	})) !== 0;
 
+	const hasChannelFollowing = (await ChannelFollowings.count({
+		where: {
+			followerId: user.id,
+		},
+		take: 1,
+	})) !== 0;
+
 	//#region Construct query
 	const followingQuery = Followings.createQueryBuilder('following')
 		.select('following.followeeId')
 		.where('following.followerId = :followerId', { followerId: user.id });
+
+	const channelFollowingQuery = ChannelFollowings.createQueryBuilder('channelFollowing')
+		.select('channelFollowing.followeeId')
+		.where('channelFollowing.followerId = :followerId', { followerId: user.id });
 
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'),
 		ps.sinceId, ps.untilId, ps.sinceDate, ps.untilDate)
 		.andWhere(new Brackets(qb => { qb
 			.where('note.userId = :meId', { meId: user.id });
 		if (hasFollowing) qb.orWhere(`note.userId IN (${ followingQuery.getQuery() })`);
+		if (hasChannelFollowing) qb.orWhere(`note.channelId IN (${ channelFollowingQuery.getQuery() })`);
 		}))
 		.innerJoinAndSelect('note.user', 'user')
 		.leftJoinAndSelect('user.avatar', 'avatar')
