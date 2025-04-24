@@ -1,4 +1,5 @@
 import define from '../../../define.js';
+import ms from 'ms';
 import { ApiError } from '../../../error.js';
 import { getUser } from '../../../common/getters.js';
 import { MessagingMessages, DriveFiles, UserGroups, UserGroupJoinings, Blockings } from '@/models/index.js';
@@ -12,6 +13,12 @@ export const meta = {
 	requireCredential: true,
 
 	kind: 'write:messaging',
+
+	limit: {
+		duration: ms('1hour'),
+		max: 500,
+		minInterval: ms('1sec'),
+	},
 
 	res: {
 		type: 'object',
