@@ -1,5 +1,5 @@
 <template>
-<component :is="self ? 'MkA' : 'a'" ref="el" class="xlcxczvw _link" :[attr]="self ? url.substr(local.length) : url" :rel="rel" :target="target"
+<component :is="self ? 'MkA' : 'a'" ref="el" class="xlcxczvw _link" :[attr]="maybeRelativeUrl" :rel="rel" :target="target"
 	:title="url"
 >
 	<slot></slot>
@@ -12,6 +12,7 @@ import { defineAsyncComponent } from 'vue';
 import { url as local } from '@/config';
 import { useTooltip } from '@/scripts/use-tooltip';
 import * as os from '@/os';
+import { maybeMakeRelative } from "@/scripts/url";
 
 const props = withDefaults(defineProps<{
 	url: string;
@@ -19,7 +20,8 @@ const props = withDefaults(defineProps<{
 }>(), {
 });
 
-const self = props.url.startsWith(local);
+const maybeRelativeUrl = maybeMakeRelative(props.url, local);
+const self = maybeRelativeUrl !== props.url;
 const attr = self ? 'to' : 'href';
 const target = self ? null : '_blank';
 
