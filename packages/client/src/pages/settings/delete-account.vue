@@ -14,6 +14,7 @@ import * as os from '@/os';
 import { signout } from '@/account';
 import { i18n } from '@/i18n';
 import { definePageMetadata } from '@/scripts/page-metadata';
+import { $i } from '@/account';
 
 async function deleteAccount() {
 	{
@@ -22,6 +23,21 @@ async function deleteAccount() {
 			text: i18n.ts.deleteAccountConfirm,
 		});
 		if (canceled) return;
+	}
+
+	{
+		const typed = await os.inputText({
+			text: i18n.t('typeToConfirm', { x: $i?.username }),
+		});
+		if (typed.canceled) return;
+
+		if (typed.result !== $i.username) {
+			os.alert({
+				type: 'error',
+				text: 'input not match',
+			});
+			return;
+		}
 	}
 
 	const { canceled, result: password } = await os.inputText({
