@@ -1,6 +1,6 @@
 import { publishMainStream } from '@/services/stream.js';
 import { pushNotification } from '@/services/push-notification.js';
-import { Notifications, Mutings, UserProfiles, Users, Blockings, Notes, UserGroups, UserGroupInvitations } from '@/models/index.js';
+import { Notifications, Mutings, UserProfiles, Users, Blockings, Notes, UserGroups, UserGroupInvitations, Followings } from '@/models/index.js';
 import { genId } from '@/misc/gen-id.js';
 import { User } from '@/models/entities/user.js';
 import { Notification } from '@/models/entities/notification.js';
@@ -20,6 +20,25 @@ export async function createNotification(
 
 	const isMuted = profile?.mutingNotificationTypes.includes(type);
 
+	// Mute For Silenced and non-following Users
+	let isMutedForSilenced = false;
+
+	if (data.notifierId) {
+		const silencedUsers = await Users.findOneBy({
+			id: data.notifierId,
+			isSilenced: true,
+		})
+		if (silencedUsers != null) {
+			const followingsExists = await Followings.findOneBy({
+				followerId: notifieeId,
+				followeeId: data.notifierId,
+			})
+			if (!followingsExists) {
+				isMutedForSilenced = true;
+			}
+		}
+	}
+
 	// Create notification
 	const notification = await Notifications.insert({
 		id: genId(),
@@ -27,10 +46,12 @@ export async function createNotification(
 		notifieeId: notifieeId,
 		type: type,
 		// 相手がこの通知をミュートしているようなら、既読を予めつけておく
-		isRead: isMuted,
+		isRead: (isMuted || isMutedForSilenced),
 		...data,
 	} as Partial<Notification>)
 		.then(x => Notifications.findOneByOrFail(x.identifiers[0]));
+
+	if (isMutedForSilenced) return notification;
 
 	const packed = await Notifications.pack(notification, {});
 
