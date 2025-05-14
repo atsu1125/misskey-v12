@@ -8,20 +8,26 @@ import { sendEmailNotification } from './send-email-notification.js';
 import config from '@/config/index.js';
 
 let silencedUsersCache: Set<string> | null = null;
+const CACHE_TTL_MS = 1 * 60 * 1000;
+let lastFetchedAt = 0;
 
 export async function getSilencedUsers(): Promise<Set<string>> {
-	if (silencedUsersCache) return silencedUsersCache;
+	const now = Date.now();
+
+	if (silencedUsersCache && (now - lastFetchedAt < CACHE_TTL_MS)) return silencedUsersCache;
 
 	const silencedUsers = await Users.find({
 		where: { isSilenced: true },
 		select: ['id'],
 	});
 	silencedUsersCache = new Set(silencedUsers.map(user => user.id));
+	lastFetchedAt = now;
 	return silencedUsersCache;
 }
 
 export function clearSilencedUserCache() {
 	silencedUsersCache = null;
+	lastFetchedAt = 0;
 }
 
 export async function createNotification(
