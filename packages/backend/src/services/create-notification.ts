@@ -7,6 +7,23 @@ import { Notification } from '@/models/entities/notification.js';
 import { sendEmailNotification } from './send-email-notification.js';
 import config from '@/config/index.js';
 
+let silencedUsersCache: Set<string> | null = null;
+
+export async function getSilencedUsers(): Promise<Set<string>> {
+	if (silencedUsersCache) return silencedUsersCache;
+
+	const silencedUsers = await Users.find({
+		where: { isSilenced: true },
+		select: ['id'],
+	});
+	silencedUsersCache = new Set(silencedUsers.map(user => user.id));
+	return silencedUsersCache;
+}
+
+export function clearSilencedUserCache() {
+	silencedUsersCache = null;
+}
+
 export async function createNotification(
 	notifieeId: User['id'],
 	type: Notification['type'],
@@ -22,20 +39,15 @@ export async function createNotification(
 
 	// Mute For Silenced and non-following Users
 	let isMutedForSilenced = false;
+	const silencedUserSet = await getSilencedUsers();
 
-	if (data.notifierId) {
-		const silencedUsers = await Users.findOneBy({
-			id: data.notifierId,
-			isSilenced: true,
-		})
-		if (silencedUsers != null) {
-			const followingsExists = await Followings.findOneBy({
-				followerId: notifieeId,
-				followeeId: data.notifierId,
-			})
-			if (!followingsExists) {
-				isMutedForSilenced = true;
-			}
+	if (data.notifierId && silencedUserSet.has(data.notifierId)) {
+		const followingsExists = await Followings.findOneBy({
+			followerId: notifieeId,
+			followeeId: data.notifierId,
+		});
+		if (!followingsExists) {
+			isMutedForSilenced = true;
 		}
 	}
 

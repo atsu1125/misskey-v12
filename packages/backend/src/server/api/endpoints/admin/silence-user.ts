@@ -2,6 +2,7 @@ import define from '../../define.js';
 import { Users } from '@/models/index.js';
 import { insertModerationLog } from '@/services/insert-moderation-log.js';
 import { publishInternalEvent } from '@/services/stream.js';
+import { clearSilencedUserCache } from '@/services/create-notification.js';
 
 export const meta = {
 	tags: ['admin'],
@@ -39,4 +40,6 @@ export default define(meta, paramDef, async (ps, me) => {
 	insertModerationLog(me, 'silence', {
 		targetId: user.id,
 	});
+
+	clearSilencedUserCache();
 });
