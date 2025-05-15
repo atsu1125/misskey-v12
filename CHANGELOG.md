@@ -8,6 +8,26 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.7 (2025/05/15)
+### Improvements
+- チャットの送信のAPIレートリミット @atsu1125
+- アカウント削除時にユーザー名の確認を必須とする @atsu1125
+- フォローしていないサイレンスしているユーザーからの通知をフィルタするように @atsu1125
+- 凍結されたユーザのノートが各種タイムラインで表示されないように @anatawa12 @syuilo @atsu1125
+
+### Bugfixes
+- モデレータがモデレーションノートを見れないのを修正 @atsu1125
+- ユーザー検索でページネーションが機能しない問題を修正 @atsu1125
+- チャンネル投稿が正しいタイムラインに表示されていない問題を修正 @samunohito @atsu1125
+- ActivityPubのフォローアクティビティにユニークなIDを付与 @Johann150 @atsu1125
+- URLプレビューの画像は全てメディアプロキシを通す @atsu1125
+- クライアントのリンクの自ホスト（インスタンス公開URL）の検証を堅牢に @atsu1125
+- aiscriptにて親ディレクトリへのアクセスを拒否 @atsu1125
+- アカウント削除の試行回数を3回にして試行間隔にapBackoffを利用する @atsu1125
+- ノート投稿の公開範囲を記憶する設定でローカルのみを記憶するように @taiyme @atsu1125
+- user.featured列が状況によってJSON文字列になっていたのを修正 @eternal-flame-AD
+- プロフィール追加情報で無効なURLに入力された場合に照会エラーを出るのを修正 @eternal-flame-AD
+
 ## 12.119.2-fix.7.6 (2025/04/05)
 ### Improvements
 - Node 18.20.8 @atsu1125
@@ -16,7 +36,7 @@ You should also include the user name that made the change.
 - S3_SAFEかつURL_SAFEでない文字列をprefixに使えないように @1673beta
 - リモートユーザーはグループに招待できないのでエラーを返すように @atsu1125
 - ノートを削除するときにリノートかリプライしたリモートユーザーのインスタンスにも配送するように @zyoshoka @atsu1125
-- カスタム絵文字をインポートするときにリモートインスタンスの同名の絵文字を削除しないように @yunochi @atsu1125 
+- カスタム絵文字をインポートするときにリモートインスタンスの同名の絵文字を削除しないように @yunochi @atsu1125
 - 通報のAPIリミット @atsu1125
 - 2段階認証を有効化しているとログインできない問題を修正 @atsu1125
 
