@@ -7,6 +7,7 @@ import { makePaginationQuery } from '../../common/make-pagination-query.js';
 import { generateMutedUserQuery } from '../../common/generate-muted-user-query.js';
 import { generateVisibilityQuery } from '../../common/generate-visibility-query.js';
 import { generateBlockedUserQuery } from '../../common/generate-block-query.js';
+import { generateSuspendedUserQueryForNote } from '../../common/generate-suspended-query.js';
 
 export const meta = {
 	tags: ['notes', 'hashtags'],
@@ -81,6 +82,7 @@ export default define(meta, paramDef, async (ps, me) => {
 		.leftJoinAndSelect('renoteUser.banner', 'renoteUserBanner');
 
 	generateVisibilityQuery(query, me);
+	generateSuspendedUserQueryForNote(query);
 	if (me) generateMutedUserQuery(query, me);
 	if (me) generateBlockedUserQuery(query, me);
 

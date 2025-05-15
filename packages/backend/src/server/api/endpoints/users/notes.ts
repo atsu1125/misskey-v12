@@ -7,6 +7,7 @@ import { makePaginationQuery } from '../../common/make-pagination-query.js';
 import { generateVisibilityQuery } from '../../common/generate-visibility-query.js';
 import { generateMutedUserQuery } from '../../common/generate-muted-user-query.js';
 import { generateBlockedUserQuery } from '../../common/generate-block-query.js';
+import { generateSuspendedUserQueryForNote } from '../../common/generate-suspended-query.js';
 
 export const meta = {
 	tags: ['users', 'notes'],
@@ -60,6 +61,8 @@ export default define(meta, paramDef, async (ps, me) => {
 		throw e;
 	});
 
+	const isAdminOrModerator = me && (me.isAdmin || me.isModerator);
+
 	//#region Construct query
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'), ps.sinceId, ps.untilId, ps.sinceDate, ps.untilDate)
 		.andWhere('note.userId = :userId', { userId: user.id })
@@ -79,6 +82,9 @@ export default define(meta, paramDef, async (ps, me) => {
 	if (me) {
 		generateMutedUserQuery(query, me, user);
 		generateBlockedUserQuery(query, me);
+	}
+	if (!isAdminOrModerator) {
+		generateSuspendedUserQueryForNote(query);
 	}
 
 	if (ps.withFiles) {
