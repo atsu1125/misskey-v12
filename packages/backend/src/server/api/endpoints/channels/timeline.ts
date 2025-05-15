@@ -3,6 +3,7 @@ import { ApiError } from '../../error.js';
 import { Notes, Channels } from '@/models/index.js';
 import { makePaginationQuery } from '../../common/make-pagination-query.js';
 import { activeUsersChart } from '@/services/chart/index.js';
+import { generateSuspendedUserQueryForNote } from '../../common/generate-suspended-query.js';
 
 export const meta = {
 	tags: ['notes', 'channels'],
@@ -66,6 +67,8 @@ export default define(meta, paramDef, async (ps, user) => {
 		.leftJoinAndSelect('renoteUser.avatar', 'renoteUserAvatar')
 		.leftJoinAndSelect('renoteUser.banner', 'renoteUserBanner')
 		.leftJoinAndSelect('note.channel', 'channel');
+
+	generateSuspendedUserQueryForNote(query);
 	//#endregion
 
 	const timeline = await query.take(ps.limit).getMany();

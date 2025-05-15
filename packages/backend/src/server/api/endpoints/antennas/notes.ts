@@ -6,6 +6,7 @@ import { generateVisibilityQuery } from '../../common/generate-visibility-query.
 import { generateMutedUserQuery } from '../../common/generate-muted-user-query.js';
 import { ApiError } from '../../error.js';
 import { generateBlockedUserQuery } from '../../common/generate-block-query.js';
+import { generateSuspendedUserQueryForNote } from '../../common/generate-suspended-query.js';
 
 export const meta = {
 	tags: ['antennas', 'account', 'notes'],
@@ -74,6 +75,7 @@ export default define(meta, paramDef, async (ps, user) => {
 		.andWhere('antennaNote.antennaId = :antennaId', { antennaId: antenna.id });
 
 	generateVisibilityQuery(query, user);
+	generateSuspendedUserQueryForNote(query);
 	generateMutedUserQuery(query, user);
 	generateBlockedUserQuery(query, user);
 
