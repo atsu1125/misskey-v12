@@ -5,7 +5,7 @@ import define from '../../../define.js';
 export const meta = {
 	tags: ['notes'],
 
-	requireCredential: true,
+	requireCredential: false,
 
 	res: {
 		type: 'array',
@@ -31,34 +31,33 @@ export const paramDef = {
 export default define(meta, paramDef, async (ps, user) => {
 	const query = Polls.createQueryBuilder('poll')
 		.where('poll.userHost IS NULL')
-		.andWhere('poll.userId != :meId', { meId: user.id })
 		.andWhere('poll.noteVisibility = \'public\'')
 		.andWhere(new Brackets(qb => { qb
 			.where('poll.expiresAt IS NULL')
 			.orWhere('poll.expiresAt > :now', { now: new Date() });
 		}));
 
-	//#region exclude arleady voted polls
-	const votedQuery = PollVotes.createQueryBuilder('vote')
-		.select('vote.noteId')
-		.where('vote.userId = :meId', { meId: user.id });
+	if (user != null) {
+		query.andWhere('poll.userId != :meId', { meId: user.id });
 
-	query
-		.andWhere(`poll.noteId NOT IN (${ votedQuery.getQuery() })`);
+		//#region exclude already voted polls
+		const votedQuery = PollVotes.createQueryBuilder('vote')
+			.select('vote.noteId')
+			.where('vote.userId = :meId', { meId: user.id });
 
-	query.setParameters(votedQuery.getParameters());
-	//#endregion
+		query.andWhere(`poll.noteId NOT IN (${votedQuery.getQuery()})`);
+		query.setParameters(votedQuery.getParameters());
+		//#endregion
 
-	//#region mute
-	const mutingQuery = Mutings.createQueryBuilder('muting')
-		.select('muting.muteeId')
-		.where('muting.muterId = :muterId', { muterId: user.id });
+		//#region mute
+		const mutingQuery = Mutings.createQueryBuilder('muting')
+			.select('muting.muteeId')
+			.where('muting.muterId = :muterId', { muterId: user.id });
 
-	query
-		.andWhere(`poll.userId NOT IN (${ mutingQuery.getQuery() })`);
-
-	query.setParameters(mutingQuery.getParameters());
-	//#endregion
+		query.andWhere(`poll.userId NOT IN (${mutingQuery.getQuery()})`);
+		query.setParameters(mutingQuery.getParameters());
+		//#endregion
+	}
 
 	const polls = await query
 		.orderBy('poll.noteId', 'DESC')
@@ -77,7 +76,7 @@ export default define(meta, paramDef, async (ps, user) => {
 		},
 	});
 
-	return await Notes.packMany(notes, user, {
+	return await Notes.packMany(notes, user ?? null, {
 		detail: true,
 	});
 });
