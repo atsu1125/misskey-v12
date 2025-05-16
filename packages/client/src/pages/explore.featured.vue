@@ -2,7 +2,7 @@
 <MkSpacer :content-max="800">
 	<MkTab v-model="tab" style="margin-bottom: var(--margin);">
 		<option value="notes">{{ i18n.ts.notes }}</option>
-		<option value="polls">{{ i18n.ts.poll }}</option>
+		<option value="polls" v-if="$i">{{ i18n.ts.poll }}</option>
 	</MkTab>
 	<XNotes v-if="tab === 'notes'" :pagination="paginationForNotes"/>
 	<XNotes v-else-if="tab === 'polls'" :pagination="paginationForPolls"/>
