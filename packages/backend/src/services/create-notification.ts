@@ -105,8 +105,7 @@ export async function createNotification(
 						isRead: true,
 					};
 					await Notifications.update({
-						notifierId: data.notifierId,
-						notifieeId: notifieeId,
+						id: notification.id,
 					}, updates);
 					return;
 				}

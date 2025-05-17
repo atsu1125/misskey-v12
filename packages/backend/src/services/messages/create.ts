@@ -86,8 +86,7 @@ export async function createMessage(user: { id: User['id']; host: User['host']; 
 						isRead: true,
 					};
 					await MessagingMessages.update({
-						recipientId: recipientUser.id,
-						userId: user.id,
+						id: message.id,
 					}, updates);
 					return;
 				}
