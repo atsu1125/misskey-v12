@@ -1,6 +1,6 @@
 import Bull from 'bull';
 import { In } from 'typeorm';
-import { Notes, Polls, PollVotes } from '@/models/index.js';
+import { Notes, Polls, PollVotes, UserProfiles } from '@/models/index.js';
 import { queueLogger } from '../logger.js';
 import { EndedPollNotificationJobData } from '@/queue/types.js';
 import { createNotification } from '@/services/create-notification.js';
@@ -24,9 +24,12 @@ export async function endedPollNotification(job: Bull.Job<EndedPollNotificationJ
 	const userIds = [...new Set([note.userId, ...votes.map(v => v.userId)])];
 
 	for (const userId of userIds) {
-		createNotification(userId, 'pollEnded', {
-			noteId: note.id,
-		});
+		const profile = await UserProfiles.findOneByOrFail(userId);
+		if (profile.userHost === null) {
+			createNotification(userId, 'pollEnded', {
+				noteId: note.id,
+			});
+		}
 	}
 
 	done();
