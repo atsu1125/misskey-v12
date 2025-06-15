@@ -636,6 +636,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/extract-domain@2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@types/extract-domain/-/extract-domain-2.3.3.tgz#95ff9c5a905248e12126c20961fb74d692f86396"
+  integrity sha512-t3ZCM8+maoejRVsdz8tby24adaI5k8E8MWjnxjxxnPgO31Vn7qB6vPuU0+KOhjjP7mQyuf+wBvusTAqKyW+Aew==
+
 "@types/fluent-ffmpeg@2.1.20":
   version "2.1.20"
   resolved "https://registry.yarnpkg.com/@types/fluent-ffmpeg/-/fluent-ffmpeg-2.1.20.tgz#3b5f42fc8263761d58284fa46ee6759a64ce54ac"
