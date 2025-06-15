@@ -1,7 +1,6 @@
 import { validate as validateEmail } from 'deep-email-validator';
 import { UserProfiles } from '@/models/index.js';
 import { fetchMeta } from '@/misc/fetch-meta.js';
-import extractDomain from 'extract-domain';
 
 export async function validateEmailForAccount(emailAddress: string): Promise<{
 	available: boolean;
@@ -24,7 +23,7 @@ export async function validateEmailForAccount(emailAddress: string): Promise<{
 	}) : { valid: true };
 
 	// メールドメインブロックを判定
-	const domain = extractDomain(emailAddress).toLowerCase();
+	const domain: string = emailAddress.split('@')[1];
 	let blockedemaildomain = false;
 	if (meta.blockedEmailDomains.some(x => domain.endsWith(x))) {
 		blockedemaildomain = true;
