@@ -10,6 +10,7 @@ import { MAX_NOTE_TEXT_LENGTH } from '@/const.js';
 import { noteVisibilities } from '../../../../types.js';
 import { ApiError } from '../../error.js';
 import define from '../../define.js';
+import { getSilencedUsers } from '@/services/create-notification.js';
 
 export const meta = {
 	tags: ['notes'],
@@ -209,6 +210,7 @@ export default define(meta, paramDef, async (ps, user) => {
 	}
 
 	let renote: Note | null = null;
+	let requireSilence = false;
 	if (ps.renoteId != null) {
 		// Fetch renote to note
 		renote = await Notes.findOneBy({ id: ps.renoteId });
@@ -237,6 +239,12 @@ export default define(meta, paramDef, async (ps, user) => {
 		} else if (renote.visibility === 'specified') {
 			// specified / direct noteはreject
 			throw new ApiError(meta.errors.cannotRenoteDueToVisibility);
+		}
+
+		// Check Renote of Silenced User Notes
+		const silencedUserSet = await getSilencedUsers();
+		if (ps.visibility === 'public' && silencedUserSet.has(renote.userId)) {
+			requireSilence = true;
 		}
 	}
 
@@ -300,7 +308,7 @@ export default define(meta, paramDef, async (ps, user) => {
 		renote,
 		cw: ps.cw,
 		localOnly: ps.localOnly,
-		visibility: ps.visibility,
+		visibility: requireSilence ? 'home' : ps.visibility,
 		visibleUsers,
 		channel,
 		apMentions: ps.noExtractMentions ? [] : undefined,
