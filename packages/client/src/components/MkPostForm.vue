@@ -271,7 +271,13 @@ if ($i && $i.isSilenced && visibility === 'public') {
 
 // 公開以外へのリプライ時は元の公開範囲を引き継ぐ
 if (props.reply && ['home', 'followers', 'specified'].includes(props.reply.visibility)) {
-	visibility = props.reply.visibility;
+	if (props.reply.visibility === 'home' && visibility === 'followers') {
+		visibility = 'followers'; // もともと公開範囲がフォロワーのみならホームには上げない
+	} else if (['home', 'followers'].includes(props.reply.visibility) && visibility === 'specified') {
+		visibility = 'specified'; // もともと公開範囲がダイレクトならホームもしくはフォロワーのみには上げない
+	} else {
+		visibility = props.reply.visibility;
+	}
 	if (props.reply.visibility === 'specified') {
 		os.api('users/show', {
 			userIds: props.reply.visibleUserIds.filter(uid => uid !== $i.id && uid !== props.reply.userId),
