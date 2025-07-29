@@ -11,3 +11,13 @@ export function generateSuspendedUserQueryForNote(q: SelectQueryBuilder<any>) {
 		.andWhere(brakets('replyUser'))
 		.andWhere(brakets('renoteUser'));
 }
+
+export function generateSilencedUserQueryForNote(q: SelectQueryBuilder<any>) {
+	const brakets = (user: string) => new Brackets(qb => qb
+		.where(`note.${user}Id IS NULL`)
+		.orWhere(`${user}.isSilenced = FALSE`));
+	q
+		.andWhere('user.isSilenced = FALSE')
+		.andWhere(brakets('replyUser'))
+		.andWhere(brakets('renoteUser'));
+}
