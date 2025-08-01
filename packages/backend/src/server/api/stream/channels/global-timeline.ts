@@ -28,6 +28,7 @@ export default class extends Channel {
 
 	private async onNote(note: Packed<'Note'>) {
 		if (note.visibility !== 'public') return;
+		if (note.localOnly) return;
 		if (note.channelId != null) return;
 
 		// リプライなら再pack
