@@ -111,11 +111,11 @@ const popularUsersF = { endpoint: 'users', limit: 10, noPaging: true, params: {
 	sort: '+follower',
 } };
 const recentlyUpdatedUsersF = { endpoint: 'users', limit: 10, noPaging: true, params: {
-	origin: 'combined',
+	origin: 'remote',
 	sort: '+updatedAt',
 } };
 const recentlyRegisteredUsersF = { endpoint: 'users', limit: 10, noPaging: true, params: {
-	origin: 'combined',
+	origin: 'remote',
 	sort: '+createdAt',
 } };
 
