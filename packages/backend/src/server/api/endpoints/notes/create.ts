@@ -249,6 +249,7 @@ export default define(meta, paramDef, async (ps, user) => {
 	}
 
 	let reply: Note | null = null;
+	let requireSpecified = false;
 	if (ps.replyId != null) {
 		// Fetch reply
 		reply = await Notes.findOneBy({ id: ps.replyId });
@@ -268,6 +269,10 @@ export default define(meta, paramDef, async (ps, user) => {
 			if (block) {
 				throw new ApiError(meta.errors.youHaveBeenBlocked);
 			}
+		}
+
+		if (reply.visibility === 'specified' && ps.visibility !== 'specified') {
+			requireSpecified = true;
 		}
 	}
 
@@ -308,7 +313,7 @@ export default define(meta, paramDef, async (ps, user) => {
 		renote,
 		cw: ps.cw,
 		localOnly: ps.localOnly,
-		visibility: requireSilence ? 'home' : ps.visibility,
+		visibility: requireSpecified ? 'specified' : requireSilence ? 'home' : ps.visibility,
 		visibleUsers,
 		channel,
 		apMentions: ps.noExtractMentions ? [] : undefined,
