@@ -22,6 +22,11 @@
 				<template #key>{{ i18n.ts._wordMute.mutedNotes }}</template>
 				<template #value>{{ number(hardWordMutedNotesCount) }}</template>
 			</MkKeyValue>
+			<MkFolder :foldable="true" :expanded="false">
+				<MkSpacer :content-max="300">
+					<XNotes ref="notes" :pagination="pagination"/>
+				</MkSpacer>
+			</MkFolder>
 		</div>
 	</div>
 	<MkButton primary inline :disabled="!changed" @click="save()"><i class="fas fa-save"></i> {{ i18n.ts.save }}</MkButton>
@@ -35,6 +40,8 @@ import MkKeyValue from '@/components/MkKeyValue.vue';
 import MkButton from '@/components/MkButton.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import MkTab from '@/components/MkTab.vue';
+import MkFolder from '@/components/MkFolder.vue';
+import XNotes from '@/components/MkNotes.vue';
 import * as os from '@/os';
 import number from '@/filters/number';
 import { defaultStore } from '@/store';
@@ -55,6 +62,11 @@ const softMutedWords = ref(render(defaultStore.state.mutedWords));
 const hardMutedWords = ref(render($i!.mutedWords));
 const hardWordMutedNotesCount = ref(null);
 const changed = ref(false);
+
+const pagination = {
+	endpoint: 'notes/hard-muted-notes' as const,
+	limit: 10,
+};
 
 os.api('i/get-word-muted-notes-count', {}).then(response => {
 	hardWordMutedNotesCount.value = response?.count;
