@@ -74,6 +74,7 @@ export default class extends Channel {
 		// レコードが追加されるNoteでも追加されるより先にここのストリーミングの処理に到達することが起こる。
 		// そのためレコードが存在するかのチェックでは不十分なので、改めてcheckWordMuteを呼んでいる
 		if (this.userProfile && await checkWordMute(note, this.user, this.userProfile.mutedWords)) return;
+		if (note.renote && this.user!.id && (this.user!.id !== note.userId) && this.userProfile && await checkWordMute(note.renote, this.user, this.userProfile.mutedWords)) return;
 
 		this.connection.cacheNote(note);
 
