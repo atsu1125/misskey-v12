@@ -177,11 +177,19 @@ const isLong = (appearNote.cw == null && appearNote.text != null && (
 ));
 const collapsed = ref(appearNote.cw == null && isLong);
 const isDeleted = ref(false);
-const muted = ref(checkWordMute(appearNote, $i, defaultStore.state.mutedWords));
+const muted = ref(checkMute(appearNote, $i, defaultStore.state.mutedWords));
 const translation = ref(null);
 const translating = ref(false);
 const showTicker = (defaultStore.state.instanceTicker === 'always') || (defaultStore.state.instanceTicker === 'remote' && appearNote.user.instance);
 const enableSudo = defaultStore.state.enableSudo;
+
+function checkMute(note: misskey.entities.Note, me: Record<string, any> | null | undefined, mutedWords: Array<string | string[]> | undefined | null): boolean {
+	if (mutedWords == null) return false;
+	if (checkWordMute(note, me, mutedWords)) return true;
+	if (note.reply && (me && (note.userId !== me.id)) && checkWordMute(note.reply, me, mutedWords)) return true;
+	if (note.renote && (me && (note.userId !== me.id)) && checkWordMute(note.renote, me, mutedWords)) return true;
+	return false;
+}
 
 const keymap = {
 	'r': () => reply(true),
