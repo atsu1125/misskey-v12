@@ -22,11 +22,13 @@
 				<template #key>{{ i18n.ts._wordMute.mutedNotes }}</template>
 				<template #value>{{ number(hardWordMutedNotesCount) }}</template>
 			</MkKeyValue>
+			<!--
 			<MkFolder :foldable="true" :expanded="false">
 				<MkSpacer :content-max="300">
 					<XNotes ref="notes" :pagination="pagination"/>
 				</MkSpacer>
 			</MkFolder>
+			-->
 		</div>
 	</div>
 	<MkButton primary inline :disabled="!changed" @click="save()"><i class="fas fa-save"></i> {{ i18n.ts.save }}</MkButton>
