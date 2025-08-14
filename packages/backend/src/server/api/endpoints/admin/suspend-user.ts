@@ -7,6 +7,7 @@ import { doPostSuspend } from '@/services/suspend-user.js';
 import { publishUserEvent, publishInternalEvent } from '@/services/stream.js';
 import { Not, IsNull } from 'typeorm';
 import { rejectFollowRequest } from '@/services/following/reject.js';
+import { publishToFollowers } from '@/services/i/update.js';
 
 export const meta = {
 	tags: ['admin'],
@@ -63,6 +64,8 @@ export default define(meta, paramDef, async (ps, me) => {
 		}
 		await unFollowAll(user).catch(e => {});
 		await readAllNotify(user).catch(e => {});
+		// フォロワーにUpdateを配信
+		await publishToFollowers(user.id);
 	})();
 });
 

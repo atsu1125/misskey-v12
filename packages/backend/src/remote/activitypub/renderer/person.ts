@@ -82,24 +82,25 @@ export async function renderPerson(user: ILocalUser) {
 		endpoints: { sharedInbox: `${config.url}/inbox` },
 		url: `${config.url}/@${user.username}`,
 		preferredUsername: user.username,
-		name: user.name,
-		summary: profile.description ? toHtml(mfm.parse(profile.description)) : null,
-		icon: avatar ? renderImage(avatar) : null,
-		image: banner ? renderImage(banner) : null,
+		name: user.isSuspended ? null : user.name,
+		summary: user.isSuspended ? null : profile.description ? toHtml(mfm.parse(profile.description)) : null,
+		icon: user.isSuspended ? null : avatar ? renderImage(avatar) : null,
+		image: user.isSuspended ? null : banner ? renderImage(banner) : null,
 		tag,
 		manuallyApprovesFollowers: user.isLocked,
-		discoverable: !!user.isExplorable,
+		discoverable: user.isSuspended ? false : !!user.isExplorable,
 		published: user.createdAt.toISOString(),
 		publicKey: renderKey(user, keypair, `#main-key`),
 		isCat: user.isCat,
-		attachment: attachment.length ? attachment : undefined,
+		attachment: user.isSuspended ? undefined : attachment.length ? attachment : undefined,
+		suspended: user.isSuspended,
 	} as any;
 
-	if (profile?.birthday) {
+	if (profile?.birthday && !user.isSuspended) {
 		person['vcard:bday'] = profile.birthday;
 	}
 
-	if (profile?.location) {
+	if (profile?.location && !user.isSuspended) {
 		person['vcard:Address'] = profile.location;
 	}
 

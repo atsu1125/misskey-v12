@@ -2,6 +2,7 @@ import define from '../../define.js';
 import { Users } from '@/models/index.js';
 import { insertModerationLog } from '@/services/insert-moderation-log.js';
 import { doPostUnsuspend } from '@/services/unsuspend-user.js';
+import { publishToFollowers } from '@/services/i/update.js';
 
 export const meta = {
 	tags: ['admin'],
@@ -35,4 +36,7 @@ export default define(meta, paramDef, async (ps, me) => {
 	});
 
 	doPostUnsuspend(user);
+
+	// フォロワーにUpdateを配信
+	publishToFollowers(user.id);
 });
