@@ -29,35 +29,43 @@ export async function performActivity(actor: CacheableRemoteUser, activity: IObj
 }
 
 async function performOneActivity(actor: CacheableRemoteUser, activity: IObject): Promise<void> {
-	if (actor.isSuspended) return;
-
 	if (isCreate(activity)) {
+		if (actor.isSuspended) return;
 		await create(actor, activity);
 	} else if (isDelete(activity)) {
 		await performDeleteActivity(actor, activity);
 	} else if (isUpdate(activity)) {
 		await performUpdateActivity(actor, activity);
 	} else if (isRead(activity)) {
+		if (actor.isSuspended) return;
 		await performReadActivity(actor, activity);
 	} else if (isFollow(activity)) {
+		if (actor.isSuspended) return;
 		await follow(actor, activity);
 	} else if (isAccept(activity)) {
+		if (actor.isSuspended) return;
 		await accept(actor, activity);
 	} else if (isReject(activity)) {
 		await reject(actor, activity);
 	} else if (isAdd(activity)) {
+		if (actor.isSuspended) return;
 		await add(actor, activity).catch(err => apLogger.error(err));
 	} else if (isRemove(activity)) {
+		if (actor.isSuspended) return;
 		await remove(actor, activity).catch(err => apLogger.error(err));
 	} else if (isAnnounce(activity)) {
+		if (actor.isSuspended) return;
 		await announce(actor, activity);
 	} else if (isLike(activity)) {
+		if (actor.isSuspended) return;
 		await like(actor, activity);
 	} else if (isUndo(activity)) {
 		await undo(actor, activity);
 	} else if (isBlock(activity)) {
+		if (actor.isSuspended) return;
 		await block(actor, activity);
 	} else if (isFlag(activity)) {
+		if (actor.isSuspended) return;
 		await flag(actor, activity);
 	} else {
 		apLogger.warn(`unrecognized activity type: ${(activity as any).type}`);
