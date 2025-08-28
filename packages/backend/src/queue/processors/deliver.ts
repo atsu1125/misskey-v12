@@ -15,6 +15,65 @@ import { StatusError } from '@/misc/fetch.js';
 
 const logger = new Logger('deliver');
 
+type StoplightState = 'blue' | 'yellow' | 'red';
+
+interface StoplightStatus {
+	state: StoplightState;
+	failureCount: number;
+	lastFailure: number;
+	redUntil?: number;
+}
+
+const stoplightMap = new Map<string, StoplightStatus>();
+
+function canDeliverToHost(host: string): boolean {
+	const status = stoplightMap.get(host);
+	const now = Date.now();
+
+	if (!status) return true;
+
+	if (status.state === 'red') {
+		if (status.redUntil && now > status.redUntil) {
+			// Expire Red State → Turn Yellow and Decrement 1 count
+			stoplightMap.set(host, { state: 'yellow', failureCount: 9 });
+			return true;
+		}
+		return false; // Red State
+	}
+
+	return true;
+}
+
+function reportDeliveryResult(host: string, success: boolean) {
+	const now = Date.now();
+	const status = stoplightMap.get(host) ?? { state: 'blue', failureCount: 0, lastFailure: 0 };
+
+	if (success) {
+		if (status.state !== 'blue') {
+			stoplightMap.set(host, { state: 'blue', failureCount: 0, lastFailure: 0 });
+		}
+		return;
+	}
+
+	// if fails
+	// Increment 1 count
+	let failureCount = status.failureCount + 1;
+
+	if (status.state === 'blue') {
+		stoplightMap.set(host, { state: 'yellow', failureCount, lastFailure: now });
+	} else if (status.state === 'yellow' && failureCount >= 10) {
+		stoplightMap.set(host, {
+			state: 'red',
+			failureCount,
+			lastFailure: now,
+			redUntil: now + 1000 * 60 * 1 // 1 minute
+		});
+	} else {
+		// (Yellow State and failureCount is less than 10) Or Red State
+		stoplightMap.set(host, { ...status, failureCount, lastFailure: now });
+	}
+}
+
 let latest: string | null = null;
 
 const suspendedHostsCache = new Cache<Instance[]>(1000 * 60 * 60);
@@ -42,6 +101,10 @@ export default async (job: Bull.Job<DeliverJobData>) => {
 		return 'skip (suspended)';
 	}
 
+	if (!canDeliverToHost(host)) {
+    throw `[STOPLIGHT] Delivery to ${host} is blocked (RED)`;
+  }
+
 	try {
 		if (latest !== (latest = JSON.stringify(job.data.content, null, 2))) {
 			logger.debug(`delivering ${latest}`);
@@ -65,6 +128,8 @@ export default async (job: Bull.Job<DeliverJobData>) => {
 			federationChart.deliverd(i.host, true);
 		});
 
+		reportDeliveryResult(host, true);
+
 		return 'Success';
 	} catch (res) {
 		// Update stats
@@ -87,6 +152,8 @@ export default async (job: Bull.Job<DeliverJobData>) => {
 			apRequestChart.deliverFail();
 			federationChart.deliverd(i.host, false);
 		});
+
+		reportDeliveryResult(host, false);
 
 		if (res instanceof StatusError) {
 			// 4xx
