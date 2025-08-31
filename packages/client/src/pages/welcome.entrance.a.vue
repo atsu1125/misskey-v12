@@ -39,7 +39,7 @@
 			<MarqueeText :duration="40">
 				<MkA v-for="instance in instances" :key="instance.id" :class="$style.federationInstance" :to="`/instance-info/${instance.host}`" behavior="window">
 					<!--<MkInstanceCardMini :instance="instance"/>-->
-					<img v-if="instance.iconUrl" class="icon" :src="instance.iconUrl" alt=""/>
+					<img v-if="getInstanceIcon(instance)" class="icon" :src="getInstanceIcon(instance)" alt=""/>
 					<span class="name _monospace">{{ instance.host }}</span>
 				</MkA>
 			</MarqueeText>
@@ -63,6 +63,7 @@ import * as os from '@/os';
 import number from '@/filters/number';
 import { i18n } from '@/i18n';
 import MkInfo from '@/components/MkInfo.vue';
+import { getProxiedImageUrlNullable } from '@/scripts/media-proxy';
 
 let meta = $ref();
 let stats = $ref();
@@ -128,6 +129,10 @@ function showMenu(ev) {
 			window.open('https://misskey-hub.net/help.md', '_blank');
 		},
 	}], ev.currentTarget ?? ev.target);
+}
+
+function getInstanceIcon(instance): string {
+	return getProxiedImageUrlNullable(instance.iconUrl, 'preview') ?? getProxiedImageUrlNullable(instance.faviconUrl, 'preview') ?? '/client-assets/dummy.png';
 }
 </script>
 

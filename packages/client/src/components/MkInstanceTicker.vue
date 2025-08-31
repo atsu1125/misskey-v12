@@ -1,19 +1,18 @@
 <template>
 <div v-tooltip="tooltip" class="hpaizdrt" :style="bg">
-	<img v-if="instance.faviconUrl" class="icon" :src="instance.faviconUrl"/>
+	<img v-if="faviconUrl" class="icon" :src="faviconUrl"/>
 	<span class="name">{{ instance.name }}</span>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { } from 'vue';
+import { computed } from 'vue';
 import { instanceName, version, software } from '@/config';
 import { instance as Instance } from '@/instance';
 import { getProxiedImageUrlNullable } from '@/scripts/media-proxy';
 
 const props = defineProps<{
 	instance?: {
-		faviconUrl?: string
 		name: string
 		themeColor?: string
 		softwareName?: string;
@@ -23,12 +22,13 @@ const props = defineProps<{
 
 // if no instance data is given, this is for the local instance
 const instance = props.instance ?? {
-	faviconUrl: getProxiedImageUrlNullable(Instance.iconUrl) ?? getProxiedImageUrlNullable(Instance.faviconUrl) ?? '/favicon.ico',
 	name: instanceName,
 	themeColor: (document.querySelector('meta[name="theme-color-orig"]') as HTMLMetaElement).content,
 	softwareName: software,
 	softwareVersion: version,
 };
+
+const faviconUrl = computed(() => props.instance ? getProxiedImageUrlNullable(props.instance.faviconUrl, 'preview') : getProxiedImageUrlNullable(Instance.iconUrl, 'preview') ?? getProxiedImageUrlNullable(Instance.faviconUrl, 'preview') ?? '/favicon.ico');
 
 const tooltip = instance.softwareName == null || instance.softwareVersion == null
 	? null

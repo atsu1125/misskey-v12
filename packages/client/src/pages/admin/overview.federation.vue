@@ -3,7 +3,7 @@
 	<MkLoading v-if="fetching"/>
 	<transition-group v-else tag="div" :name="$store.state.animation ? 'chart' : ''" class="instances">
 		<MkA v-for="(instance, i) in instances" :key="instance.id" :to="`/instance-info/${instance.host}`" class="instance">
-			<img v-if="instance.iconUrl" :src="instance.iconUrl" alt=""/>
+			<img v-if="getInstanceIcon(instance)" :src="getInstanceIcon(instance)" alt=""/>
 			<div class="body">
 				<div class="name">{{ instance.name ?? instance.host }}</div>
 				<div class="host">{{ instance.host }}</div>
@@ -19,6 +19,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import MkMiniChart from '@/components/MkMiniChart.vue';
 import * as os from '@/os';
 import { useInterval } from '@/scripts/use-interval';
+import { getProxiedImageUrlNullable } from '@/scripts/media-proxy';
 
 const instances = ref([]);
 const charts = ref([]);
@@ -33,6 +34,10 @@ const fetch = async () => {
 	instances.value = fetchedInstances;
 	charts.value = fetchedCharts;
 	fetching.value = false;
+};
+
+function getInstanceIcon(instance): string {
+	return getProxiedImageUrlNullable(instance.iconUrl, 'preview') ?? getProxiedImageUrlNullable(instance.faviconUrl, 'preview') ?? '/client-assets/dummy.png';
 };
 
 useInterval(fetch, 1000 * 60, {

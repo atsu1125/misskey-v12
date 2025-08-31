@@ -118,8 +118,8 @@
 				<div class="body">
 					<MkTagCloud v-if="activeInstances">
 						<li v-for="instance in activeInstances">
-							<a v-if="instance.iconUrl" @click.prevent="onInstanceClick(instance)">
-								<img style="width: 32px;" :src="instance.iconUrl">
+							<a v-if="getInstanceIcon(instance)" @click.prevent="onInstanceClick(instance)">
+								<img style="width: 32px;" :src="getInstanceIcon(instance)">
 							</a>
 						</li>
 					</MkTagCloud>
@@ -183,6 +183,7 @@ import 'chartjs-adapter-date-fns';
 import { defaultStore } from '@/store';
 import { useChartTooltip } from '@/scripts/use-chart-tooltip';
 import MkFileListForAdmin from '@/components/MkFileListForAdmin.vue';
+import { getProxiedImageUrlNullable } from '@/scripts/media-proxy';
 
 Chart.register(
 	ArcElement,
@@ -385,6 +386,10 @@ async function renderChart() {
 
 function onInstanceClick(i) {
 	os.pageWindow(`/instance-info/${i.host}`);
+}
+
+function getInstanceIcon(instance): string {
+	return getProxiedImageUrlNullable(instance.iconUrl, 'preview') ?? getProxiedImageUrlNullable(instance.faviconUrl, 'preview') ?? '/client-assets/dummy.png';
 }
 
 onMounted(async () => {

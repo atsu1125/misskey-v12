@@ -3,8 +3,8 @@
 	<div class="">
 		<MkTagCloud v-if="activeInstances">
 			<li v-for="instance in activeInstances" :key="instance.id">
-				<a v-if="instance.iconUrl" @click.prevent="onInstanceClick(instance)">
-					<img style="width: 32px;" :src="instance.iconUrl">
+				<a v-if="getInstanceIcon(instance)" @click.prevent="onInstanceClick(instance)">
+					<img style="width: 32px;" :src="getInstanceIcon(instance)">
 				</a>
 			</li>
 		</MkTagCloud>
@@ -20,6 +20,7 @@ import MkContainer from '@/components/MkContainer.vue';
 import MkTagCloud from '@/components/MkTagCloud.vue';
 import * as os from '@/os';
 import { useInterval } from '@/scripts/use-interval';
+import { getProxiedImageUrlNullable } from '@/scripts/media-proxy';
 
 const name = 'instanceCloud';
 
@@ -49,6 +50,10 @@ let activeInstances = $shallowRef(null);
 
 function onInstanceClick(i) {
 	os.pageWindow(`/instance-info/${i.host}`);
+}
+
+function getInstanceIcon(instance): string {
+	return getProxiedImageUrlNullable(instance.iconUrl, 'preview') ?? getProxiedImageUrlNullable(instance.faviconUrl, 'preview') ?? '/client-assets/dummy.png';
 }
 
 useInterval(() => {

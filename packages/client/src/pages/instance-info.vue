@@ -4,7 +4,7 @@
 	<MkSpacer v-if="instance" :content-max="600" :margin-min="16" :margin-max="32">
 		<div v-if="tab === 'overview'" class="_formRoot">
 			<div class="fnfelxur">
-				<img :src="instance.iconUrl || instance.faviconUrl" alt="" class="icon"/>
+				<img :src="getInstanceIcon(instance)" alt="" class="icon"/>
 				<span class="name">{{ instance.name || `(${i18n.ts.unknown})` }}</span>
 			</div>
 			<MkKeyValue :copy="host" oneline style="margin: 1em 0;">
@@ -137,6 +137,7 @@ import { i18n } from '@/i18n';
 import MkUserCardMini from '@/components/MkUserCardMini.vue';
 import MkPagination from '@/components/MkPagination.vue';
 import { defaultStore } from '@/store';
+import { getProxiedImageUrlNullable } from '@/scripts/media-proxy';
 
 const props = defineProps<{
 	host: string;
@@ -269,6 +270,10 @@ async function deleteFollowing() {
 			text: 'input not match',
 		});
 	}
+}
+
+function getInstanceIcon(instance): string {
+	return getProxiedImageUrlNullable(instance.iconUrl, 'preview') ?? getProxiedImageUrlNullable(instance.faviconUrl, 'preview') ?? '/client-assets/dummy.png';
 }
 
 fetch();
