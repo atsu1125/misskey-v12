@@ -25,7 +25,7 @@
 						<template #default="{items}">
 							<div class="ldhfsamy">
 								<button v-for="emoji in items" :key="emoji.id" class="emoji _panel _button" :class="{ selected: selectedEmojis.includes(emoji.id) }" @click="selectMode ? toggleSelect(emoji) : edit(emoji)">
-									<img :src="getProxiedImageUrl(emoji.url)" class="img" :alt="emoji.name"/>
+									<img :src="emoji.url" class="img" :alt="emoji.name"/>
 									<div class="body">
 										<div class="name _monospace">{{ emoji.name }}</div>
 										<div class="info">{{ emoji.category }}</div>
@@ -51,7 +51,7 @@
 						<template #default="{items}">
 							<div class="ldhfsamy">
 								<div v-for="emoji in items" :key="emoji.id" class="emoji _panel _button" @click="remoteMenu(emoji, $event)">
-									<img :src="getProxiedImageUrl(emoji.url)" class="img" :alt="emoji.name"/>
+									<img :src="emoji.url" class="img" :alt="emoji.name"/>
 									<div class="body">
 										<div class="name _monospace">{{ emoji.name }}</div>
 										<div class="info">{{ emoji.host }}</div>
@@ -80,7 +80,6 @@ import { selectFile, selectFiles } from '@/scripts/select-file';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
 import { definePageMetadata } from '@/scripts/page-metadata';
-import { getProxiedImageUrl } from '@/scripts/media-proxy';
 
 const emojisPaginationComponent = ref<InstanceType<typeof MkPagination>>();
 
