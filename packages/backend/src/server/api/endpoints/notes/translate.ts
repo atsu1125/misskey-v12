@@ -61,7 +61,6 @@ export default define(meta, paramDef, async (ps, user) => {
 	if (targetLang.includes('-')) targetLang = targetLang.split('-')[0];
 
 	const params = new URLSearchParams();
-	params.append('auth_key', instance.deeplAuthKey);
 	params.append('text', note.text);
 	params.append('target_lang', targetLang);
 
@@ -73,6 +72,7 @@ export default define(meta, paramDef, async (ps, user) => {
 			'Content-Type': 'application/x-www-form-urlencoded',
 			'User-Agent': config.userAgent,
 			Accept: 'application/json, */*',
+			'Authorization': `DeepL-Auth-Key ${instance.deeplAuthKey}`,
 		},
 		body: params,
 		// TODO
