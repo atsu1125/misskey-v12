@@ -928,6 +928,8 @@ doNotSendNotificationEmailsForAbuseReportToModerator: "通報の通知メール�
 emailToReceiveAbuseReport: "通報通知を受け取るためのメールアドレス"
 emailToReceiveAbuseReportCaption: "通報通知を受け取るためのメールアドレスを指定します。ここの入力欄を空にするとメールサーバーのメールアドレスが使用されます。"
 abuseReportResolvers: "通報リゾルバー"
+cancelFollowRequestConfirm: "{name}へのフォロー申請をキャンセルしますか？"
+rejectFollowRequestConfirm: "{name}からのフォロー申請を拒否しますか？"
 
 _sensitiveMediaDetection:
   description: "機械学習を使って自動でセンシティブなメディアを検出し、モデレーションに役立てることができます。サーバーの負荷が少し増えます。"

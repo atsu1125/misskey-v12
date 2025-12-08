@@ -79,6 +79,13 @@ async function onClick() {
 			});
 		} else {
 			if (hasPendingFollowRequestFromYou) {
+				const { canceled } = await os.confirm({
+					type: 'warning',
+					text: i18n.t('cancelFollowRequestConfirm', { name: props.user.name || props.user.username }),
+				});
+
+				if (canceled) return;
+
 				await os.api('following/requests/cancel', {
 					userId: props.user.id
 				});

@@ -55,8 +55,15 @@ function accept(user) {
 	});
 }
 
-function reject(user) {
-	os.api('following/requests/reject', { userId: user.id }).then(() => {
+async function reject(user) {
+	const { canceled } = await os.confirm({
+		type: 'warning',
+		text: i18n.t('rejectFollowRequestConfirm', { name: user.name || user.username }),
+	});
+
+	if (canceled) return;
+
+	await os.api('following/requests/reject', { userId: user.id }).then(() => {
 		paginationComponent.value.reload();
 	});
 }
