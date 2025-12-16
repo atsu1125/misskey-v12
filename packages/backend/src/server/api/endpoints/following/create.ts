@@ -48,6 +48,12 @@ export const meta = {
 			code: 'BLOCKED',
 			id: 'c4ab57cc-4e41-45e9-bfd9-584f61e35ce0',
 		},
+
+		moved: {
+			message: 'Followee is moved to another account.',
+			code: 'MOVED',
+			id: '81f7e3eb-fbb8-313a-5603-bf2ce55644f9',
+		},
 	},
 
 	res: {
@@ -96,6 +102,7 @@ export default define(meta, paramDef, async (ps, user) => {
 		if (e instanceof IdentifiableError) {
 			if (e.id === '710e8fb0-b8c3-4922-be49-d5d93d8e6a6e') throw new ApiError(meta.errors.blocking);
 			if (e.id === '3338392a-f764-498d-8855-db939dcf8c48') throw new ApiError(meta.errors.blocked);
+			if (e.id === '81f7e3eb-fbb8-313a-5603-bf2ce55644f9') throw new ApiError(meta.errors.moved);
 		}
 		throw e;
 	}

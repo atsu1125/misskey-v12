@@ -168,6 +168,18 @@ export default async function(_follower: { id: User['id'] }, _followee: { id: Us
 		return;
 	}
 
+	if (followee.movedToUserId != null) {
+		if (Users.isRemoteUser(follower) && Users.isLocalUser(followee)) {
+			//　リモートフォローを受けて引っ越し済みなら、Rejectを送り返しておしまい。
+			const content = renderActivity(renderReject(renderFollow(follower, followee, requestId), followee));
+			deliver(followee , content, follower.inbox);
+			return;
+		} else {
+			//　フォロー対象が引っ越し済みなら、エラー。
+			throw new IdentifiableError('81f7e3eb-fbb8-313a-5603-bf2ce55644f9', 'moved');
+		}
+	}
+
 	const followeeProfile = await UserProfiles.findOneByOrFail({ userId: followee.id });
 
 	// フォロー対象が鍵アカウントである or
