@@ -17,11 +17,13 @@ export const EmojiRepository = db.getRepository(Emoji).extend({
 		if ((emoji.publicUrl != null || emoji.originalUrl != null) && emoji.host != null && config.mediaProxy != null) {
 			emojiUrl = appendQuery(config.mediaProxy, query({
 				url: sanitizeUrl(emoji.publicUrl || emoji.originalUrl)!,
+				emoji: 1,
 			}));
 		// リモートかつローカルプロキシ
 		} else if ((emoji.publicUrl != null || emoji.originalUrl != null) && emoji.host != null && config.proxyRemoteFiles) {
-			emojiUrl = `${config.url}/proxy/image.webp?${query({
+			emojiUrl = `${config.url}/proxy/emoji.webp?${query({
 				url: sanitizeUrl(emoji.publicUrl || emoji.originalUrl)!,
+				emoji: 1,
 			})}`;
 		}
 

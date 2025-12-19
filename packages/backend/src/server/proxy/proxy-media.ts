@@ -35,10 +35,41 @@ export async function proxyMedia(ctx: Koa.Context) {
 
 		const { mime, ext } = await detectType(path);
 		const isConvertibleImage = isMimeImage(mime, 'sharp-convertible-image');
+		const isAnimationConvertibleImage = isMimeImage(mime, 'sharp-animation-convertible-image');
+		const webpDefault: sharp.WebpOptions = {
+			quality: 85,
+			alphaQuality: 95,
+			lossless: false,
+			nearLossless: false,
+			smartSubsample: true,
+			mixed: true,
+		};
 
 		let image: IImage;
 
-		if ('static' in ctx.query && isConvertibleImage) {
+		if ('emoji' in ctx.query && isConvertibleImage) {
+			if (!isAnimationConvertibleImage && !('static' in ctx.query)) {
+				image = {
+					data: fs.readFileSync(path),
+					ext,
+					type: mime,
+				};
+			} else {
+				const data = await sharp(path, { animated: !('static' in ctx.query) })
+				.resize({
+					height: 128,
+					withoutEnlargement: true,
+				})
+				.webp(webpDefault)
+				.toBuffer();
+
+				image = {
+					data,
+					ext: 'webp',
+					type: 'image/webp',
+				};
+			}
+		} else if ('static' in ctx.query && isConvertibleImage) {
 			image = await convertToWebp(path, 498, 280);
 		} else if ('preview' in ctx.query && isConvertibleImage) {
 			image = await convertToWebp(path, 200, 200);
