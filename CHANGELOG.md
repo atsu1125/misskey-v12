@@ -8,6 +8,21 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.9 (2025/12/21)
+### Improvements
+- 連合ページのインスタンスアイコンはプロキシを利用するように @atsu1125
+- カスタム絵文字にメディアプロキシを利用できるように @atsu1125
+- `/flush`で`Clear-Site-Data header`を送るように @eternal-flame-AD @atsu1125
+- DeepLの認証方式の変更に対応 @atsu1125
+- カスタム絵文字一覧で全カテゴリを自動展開して重くならないように @atsu1125
+- フォロー対象が引っ越し済みならフォローできないように @atsu1125
+- x.comでもTwitterのURLプレビューを利用できるように @maguroshouta
+
+### Bugfixes
+- インスタンスティッカーのアイコンに正しくプロキシを適用するように @atsu1125
+- フォローリクエストの拒否とキャンセルにダイアログを出すように @kakkokari-gtyih @atsu1125
+- Pageのアイキャッチ画像をドライブから消すとPageごと消えるのを修正 @anatawa12 @atsu1125
+
 ## 12.119.2-fix.7.8 (2025/08/29)
 ### Improvements
 - サインンスされたユーザーは公開タイムラインとハイライトで表示されないように @atsu1125
