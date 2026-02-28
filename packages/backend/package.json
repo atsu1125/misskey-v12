@@ -64,7 +64,7 @@
 		"json5-loader": "4.0.1",
 		"jsonld": "8.3.3",
 		"jsrsasign": "11.0.0",
-		"koa": "2.16.3",
+		"koa": "3.1.2",
 		"koa-bodyparser": "4.3.0",
 		"koa-favicon": "2.1.0",
 		"koa-json-body": "5.3.0",
