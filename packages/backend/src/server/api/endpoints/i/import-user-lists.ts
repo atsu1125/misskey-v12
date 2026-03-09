@@ -49,7 +49,10 @@ export const paramDef = {
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps, user) => {
-	const file = await DriveFiles.findOneBy({ id: ps.fileId });
+	const file = await DriveFiles.findOneBy({
+		id: ps.fileId,
+		userId: user.id
+	});
 
 	if (file == null) throw new ApiError(meta.errors.noSuchFile);
 	//if (!file.type.endsWith('/csv')) throw new ApiError(meta.errors.unexpectedFileType);
