@@ -21,7 +21,7 @@ export default class extends Channel {
 
 		this.antennaId = params.antennaId as string;
 
-		const antennaExists = await Antennas.findOne({
+		const antennaExists = await Antennas.findOneBy({
 			id: this.antennaId,
 			userId: this.user.id,
 		});
