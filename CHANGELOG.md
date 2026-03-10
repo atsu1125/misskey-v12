@@ -8,6 +8,15 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.10 (2026/03/10)
+### Improvements
+- inboxLazyキューを追加 @mei23 @atsu1125
+
+### Bugfixes
+- インポートファイルの所有者チェックを修正 @mei23 @atsu1125
+- ノートの購読の権限を修正 @mei23 @atsu1125
+- アンテナのストリーミングの権限を修正 @atsu1125
+
 ## 12.119.2-fix.7.9 (2025/12/21)
 ### Improvements
 - 連合ページのインスタンスアイコンはプロキシを利用するように @atsu1125
