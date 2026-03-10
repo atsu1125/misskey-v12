@@ -17,7 +17,7 @@ import processEmailDeliver from './processors/email-deliver.js';
 import { endedPollNotification } from './processors/ended-poll-notification.js';
 import { queueLogger } from './logger.js';
 import { getJobInfo } from './get-job-info.js';
-import { systemQueue, dbQueue, deliverQueue, inboxQueue, objectStorageQueue, endedPollNotificationQueue, webhookDeliverQueue, emailDeliverQueue } from './queues.js';
+import { systemQueue, dbQueue, deliverQueue, inboxQueue, inboxLazyQueue, objectStorageQueue, endedPollNotificationQueue, webhookDeliverQueue, emailDeliverQueue } from './queues.js';
 import { ThinUser } from './types.js';
 import { createDigest } from '@/remote/activitypub/ap-request.js';
 
@@ -33,6 +33,7 @@ const systemLogger = queueLogger.createSubLogger('system');
 const deliverLogger = queueLogger.createSubLogger('deliver');
 const webhookLogger = queueLogger.createSubLogger('webhook');
 const inboxLogger = queueLogger.createSubLogger('inbox');
+const inboxLazyLogger = queueLogger.createSubLogger('inboxLazy');
 const dbLogger = queueLogger.createSubLogger('db');
 const objectStorageLogger = queueLogger.createSubLogger('objectStorage');
 const emailDeliverLogger = queueLogger.createSubLogger('emailDeliver');
@@ -60,6 +61,14 @@ inboxQueue
 	.on('failed', (job, err) => inboxLogger.warn(`failed(${err}) ${getJobInfo(job)} activity=${job.data.activity ? job.data.activity.id : 'none'}`, { job, e: renderError(err) }))
 	.on('error', (job: any, err: Error) => inboxLogger.error(`error ${err}`, { job, e: renderError(err) }))
 	.on('stalled', (job) => inboxLogger.warn(`stalled ${getJobInfo(job)} activity=${job.data.activity ? job.data.activity.id : 'none'}`));
+
+inboxLazyQueue
+	.on('waiting', (jobId) => inboxLazyLogger.debug(`waiting id=${jobId}`))
+	.on('active', (job) => inboxLazyLogger.debug(`active ${getJobInfo(job, true)}`))
+	.on('completed', (job, result) => inboxLazyLogger.debug(`completed(${result}) ${getJobInfo(job, true)}`))
+	.on('failed', (job, err) => inboxLazyLogger.warn(`failed(${err}) ${getJobInfo(job)} activity=${job.data.activity ? job.data.activity.id : 'none'}`, { job, e: renderError(err) }))
+	.on('error', (job: any, err: Error) => inboxLazyLogger.error(`error ${err}`, { job, e: renderError(err) }))
+	.on('stalled', (job) => inboxLazyLogger.warn(`stalled ${getJobInfo(job)} activity=${job.data.activity ? job.data.activity.id : 'none'}`));
 
 dbQueue
 	.on('waiting', (jobId) => dbLogger.debug(`waiting id=${jobId}`))
@@ -154,6 +163,23 @@ export function inbox(activity: IActivity, signature: httpSignature.IParsedSigna
 	return inboxQueue.add(data, {
 		attempts: config.inboxJobMaxAttempts || 10,
 		timeout: 5 * 60 * 1000,	// 5min
+		backoff: {
+			type: 'apBackoff',
+		},
+		removeOnComplete: true,
+		removeOnFail: true,
+	});
+}
+
+export function inboxLazy(activity: IActivity, signature: httpSignature.IParsedSignature) {
+	const data = {
+		activity: activity,
+		signature,
+	};
+
+	return inboxLazyQueue.add(data, {
+		attempts: 2,
+		timeout: 1 * 60 * 1000,	// 1min
 		backoff: {
 			type: 'apBackoff',
 		},
@@ -367,6 +393,7 @@ export default function() {
 
 	deliverQueue.process(config.deliverJobConcurrency || 128, processDeliver);
 	inboxQueue.process(config.inboxJobConcurrency || 16, processInbox);
+	inboxLazyQueue.process(1, processInbox);
 	emailDeliverQueue.process(processEmailDeliver);
 	endedPollNotificationQueue.process(endedPollNotification);
 	webhookDeliverQueue.process(64, processWebhookDeliver);

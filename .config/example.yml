@@ -181,3 +181,6 @@ id: 'aid'
 
 # Whether Disable Url Preview
 #disableUrlPreview: true
+
+# Whether Enable InboxLazy
+#enableInboxLazy: true

@@ -88,6 +88,7 @@ export type Source = {
 	disableChartsForRemoteUser?: boolean;
 	disableUrlPreview?: boolean;
 	enableS3Override?: boolean;
+	enableInboxLazy?: boolean;
 };
 
 /**
