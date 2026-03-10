@@ -4,6 +4,7 @@
 	<MkSpacer :content-max="800">
 		<XQueue v-if="tab === 'deliver'" domain="deliver"/>
 		<XQueue v-else-if="tab === 'inbox'" domain="inbox"/>
+		<XQueue v-else-if="tab === 'inboxlazy'" domain="inboxLazy"/>
 	</MkSpacer>
 </MkStickyContainer>
 </template>
@@ -47,6 +48,9 @@ const headerTabs = $computed(() => [{
 }, {
 	key: 'inbox',
 	title: 'Inbox',
+}, {
+	key: 'inboxlazy',
+	title: 'InboxLazy',
 }]);
 
 definePageMetadata({

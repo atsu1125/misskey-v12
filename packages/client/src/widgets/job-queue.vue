@@ -42,6 +42,27 @@
 			</div>
 		</div>
 	</div>
+	<div class="inboxLazy">
+		<div class="label">Inbox Lazy queue<i v-if="current.inboxLazy.waiting > 0" class="fas fa-exclamation-triangle icon"></i></div>
+		<div class="values">
+			<div>
+				<div>Process</div>
+				<div :class="{ inc: current.inboxLazy.activeSincePrevTick > prev.inboxLazy.activeSincePrevTick, dec: current.inboxLazy.activeSincePrevTick < prev.inboxLazy.activeSincePrevTick }">{{ number(current.inboxLazy.activeSincePrevTick) }}</div>
+			</div>
+			<div>
+				<div>Active</div>
+				<div :class="{ inc: current.inboxLazy.active > prev.inboxLazy.active, dec: current.inboxLazy.active < prev.inboxLazy.active }">{{ number(current.inboxLazy.active) }}</div>
+			</div>
+			<div>
+				<div>Delayed</div>
+				<div :class="{ inc: current.inboxLazy.delayed > prev.inboxLazy.delayed, dec: current.inboxLazy.delayed < prev.inboxLazy.delayed }">{{ number(current.inboxLazy.delayed) }}</div>
+			</div>
+			<div>
+				<div>Waiting</div>
+				<div :class="{ inc: current.inboxLazy.waiting > prev.inboxLazy.waiting, dec: current.inboxLazy.waiting < prev.inboxLazy.waiting }">{{ number(current.inboxLazy.waiting) }}</div>
+			</div>
+		</div>
+	</div>
 </div>
 </template>
 
@@ -96,6 +117,12 @@ const current = reactive({
 		waiting: 0,
 		delayed: 0,
 	},
+	inboxLazy: {
+		activeSincePrevTick: 0,
+		active: 0,
+		waiting: 0,
+		delayed: 0,
+	},
 });
 const prev = reactive({} as typeof current);
 let jammedAudioBuffer: AudioBuffer | null = $ref(null);
@@ -104,12 +131,12 @@ if (ColdDeviceStorage.get('sound_masterVolume')) {
 	sound.loadAudio('syuilo/queue-jammed').then(buf => jammedAudioBuffer = buf);
 }
 
-for (const domain of ['inbox', 'deliver']) {
+for (const domain of ['inbox', 'deliver', 'inboxLazy']) {
 	prev[domain] = JSON.parse(JSON.stringify(current[domain]));
 }
 
 const onStats = (stats) => {
-	for (const domain of ['inbox', 'deliver']) {
+	for (const domain of ['inbox', 'deliver', 'inboxLazy']) {
 		prev[domain] = JSON.parse(JSON.stringify(current[domain]));
 		current[domain].activeSincePrevTick = stats[domain].activeSincePrevTick;
 		current[domain].active = stats[domain].active;

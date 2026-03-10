@@ -94,7 +94,7 @@ const onStatsLog = (statsLog) => {
 };
 
 onMounted(() => {
-	os.api(props.domain === 'inbox' ? 'admin/queue/inbox-delayed' : props.domain === 'deliver' ? 'admin/queue/deliver-delayed' : null, {}).then(result => {
+	os.api(props.domain === 'inbox' ? 'admin/queue/inbox-delayed' : props.domain === 'deliver' ? 'admin/queue/deliver-delayed' : props.domain === 'inboxLazy' ? 'admin/queue/inbox-lazy-delayed' : null, {}).then(result => {
 		jobs.value = result;
 	});
 
