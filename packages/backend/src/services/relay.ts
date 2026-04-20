@@ -80,6 +80,16 @@ export async function relayRejected(id: string) {
 	return JSON.stringify(result);
 }
 
+export async function isRelayActor(actor: { inbox: string | null; sharedInbox: string | null }): Promise<boolean> {
+	const relays = await Relays.findBy({
+		status: 'accepted',
+	});
+	return relays.some(relay =>
+		(actor.inbox != null && relay.inbox === actor.inbox)
+		|| (actor.sharedInbox != null && relay.inbox === actor.sharedInbox),
+	);
+}
+
 export async function deliverToRelays(user: { id: User['id']; host: null; }, activity: any, retryable: boolean) {
 	if (activity == null) return;
 	if (retryable == null) {
