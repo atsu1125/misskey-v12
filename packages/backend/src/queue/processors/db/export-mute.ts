@@ -83,7 +83,7 @@ export async function exportMute(job: Bull.Job<DbUserJobData>, done: any): Promi
 		logger.succ(`Exported to: ${path}`);
 
 		const fileName = 'mute-' + dateFormat(new Date(), 'yyyy-MM-dd-HH-mm-ss') + '.csv';
-		const driveFile = await addFile({ user, path, name: fileName, force: true });
+		const driveFile = await addFile({ user, path, name: fileName, force: true, ext: 'csv' });
 
 		logger.succ(`Exported to: ${driveFile.id}`);
 	} finally {
