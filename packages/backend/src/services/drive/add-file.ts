@@ -366,7 +366,7 @@ export async function addFile({
 	url = null,
 	uri = null,
 	sensitive = null,
-	ext = null
+	ext = null,
 	requestIp = null,
 	requestHeaders = null,
 }: AddFileArgs): Promise<DriveFile> {
