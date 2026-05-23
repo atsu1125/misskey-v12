@@ -8,6 +8,18 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.11 (2026/05/23)
+### Improvements
+- Node 20からNode 22にアップデート @atsu1125
+
+### Bugfixes
+- 署名付きGETリクエストにおいてAcceptヘッダを署名の対象から除外 @kakkokari-gtyih
+- ローカルに存在しないリモートアカウントに対するアカウント削除リクエストを受信した際に、そのユーザーを新規作成して削除する挙動を修正 @kakkokari-gtyih @atsu1125
+- リレー経由で届いたノートがリノートとして表示される問題を修正 @sinoru @syuilo @atsu1125
+- エクスポートデータの拡張子がunknownになる問題を修正 @tamaina @atsu1125
+- 特定のテーマでクラッシュする問題を修正 @atsu1125
+- LD-Signatureのロジックを修正 @atsu1125
+
 ## 12.119.2-fix.7.10 (2026/03/10)
 ### Improvements
 - inboxLazyキューを追加 @mei23 @atsu1125
