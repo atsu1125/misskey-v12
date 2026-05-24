@@ -8,6 +8,10 @@
 You should also include the user name that made the change.
 -->
 
+## 12.119.2-fix.7.12 (2026/05/24)
+### Bugfixes
+- 必要なthemePropsが出力されない問題を修正 @atsu1125
+
 ## 12.119.2-fix.7.11 (2026/05/23)
 ### Improvements
 - Node 20からNode 22にアップデート @atsu1125
