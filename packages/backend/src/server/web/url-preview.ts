@@ -43,10 +43,10 @@ export const urlPreviewHandler = async (ctx: Koa.Context) => {
 		})}`) : await summaly(url, {
 			followRedirects: false,
 			lang: lang ?? 'ja-JP',
-			agent: config.proxy ? {
+			agent: {
 				http: httpAgent,
 				https: httpsAgent,
-			} : undefined,
+			},
 		});
 
 		logger.succ(`Got preview of ${url}: ${summary.title}`);
