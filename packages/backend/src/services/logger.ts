@@ -29,7 +29,7 @@ export default class Logger {
 
 		if (config.syslog) {
 			this.syslogClient = new SyslogPro.RFC5424({
-				applacationName: 'Misskey',
+				applicationName: 'Misskey',
 				timestamp: true,
 				encludeStructuredData: true,
 				color: true,
