@@ -319,7 +319,7 @@ function checkMissingMention() {
 		const ast = mfm.parse(text);
 
 		for (const x of extractMentions(ast)) {
-			if (!visibleUsers.some(u => (u.username === x.username) && (u.host === x.host))) {
+			if (!visibleUsers.some(u => (u.username === x.username) && ((u.host === x.host) || (x.host === host && u.host == null)))) {
 				hasNotSpecifiedMentions = true;
 				return;
 			}
