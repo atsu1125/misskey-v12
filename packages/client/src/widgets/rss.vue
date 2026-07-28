@@ -19,6 +19,7 @@ import { GetFormResultType } from '@/scripts/form';
 import * as os from '@/os';
 import MkContainer from '@/components/MkContainer.vue';
 import { useInterval } from '@/scripts/use-interval';
+import { url as baseUrl } from '@/config';
 
 const name = 'rss';
 
@@ -53,7 +54,11 @@ const fetching = ref(true);
 const tick = () => {
 	fetch(`/api/fetch-rss?url=${widgetProps.url}`, {}).then(res => {
 		res.json().then(feed => {
-			items.value = feed.items;
+			items.value = feed.items.filter((item) => {
+				if (!item.link) return false;
+				const itemUrl = new URL(item.link, baseUrl);
+				return ['http:', 'https:'].includes(itemUrl.protocol);
+			});
 			fetching.value = false;
 		});
 	});

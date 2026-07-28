@@ -21,6 +21,7 @@ import MarqueeText from '@/components/MkMarquee.vue';
 import * as os from '@/os';
 import { useInterval } from '@/scripts/use-interval';
 import { shuffle } from '@/scripts/shuffle';
+import { url as baseUrl } from '@/config';
 
 const props = defineProps<{
 	url?: string;
@@ -42,7 +43,11 @@ const tick = () => {
 			if (props.shuffle) {
 				shuffle(feed.items);
 			}
-			items.value = feed.items;
+			items.value = feed.items.filter((item) => {
+				if (!item.link) return false;
+				const itemUrl = new URL(item.link, baseUrl);
+				return ['http:', 'https:'].includes(itemUrl.protocol);
+			});
 			fetching.value = false;
 			key++;
 		});
