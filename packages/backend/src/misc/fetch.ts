@@ -112,12 +112,15 @@ export async function getResponse(args: {
 	headers: Record<string, string>;
 	timeout?: number;
 	redirect?: RequestRedirect;
+  size?: number;
 }) {
 	if (!isValidUrl(args.url)) {
 		throw new StatusError('Invalid URL', 400);
 	}
 
 	const timeout = args.timeout || 10 * 1000;
+
+  const size = args.size || 10 * 1024 * 1024;
 
 	const controller = new AbortController();
 	setTimeout(() => {
@@ -129,7 +132,7 @@ export async function getResponse(args: {
 		headers: args.headers,
 		body: args.body,
 		timeout,
-		size: 10 * 1024 * 1024,
+		size: size,
 		agent: getAgentByUrl,
 		signal: controller.signal,
 		redirect: args.redirect,
