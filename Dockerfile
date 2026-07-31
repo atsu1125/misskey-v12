@@ -1,4 +1,4 @@
-FROM node:22.23.1-bookworm AS builder
+FROM node:22.23.2-bookworm AS builder
 
 ARG NODE_ENV=production
 
@@ -13,7 +13,7 @@ RUN yarn install
 RUN yarn build
 RUN rm -rf .git
 
-FROM node:22.23.1-bookworm-slim AS runner
+FROM node:22.23.2-bookworm-slim AS runner
 
 WORKDIR /misskey
 
