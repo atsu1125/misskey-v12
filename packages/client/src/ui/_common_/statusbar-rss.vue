@@ -20,6 +20,7 @@ import { computed, defineAsyncComponent, ref, toRef, watch } from 'vue';
 import MarqueeText from '@/components/MkMarquee.vue';
 import * as os from '@/os';
 import { useInterval } from '@/scripts/use-interval';
+import { tryParseUrl } from '@/scripts/url';
 import { shuffle } from '@/scripts/shuffle';
 import { url as baseUrl } from '@/config';
 
@@ -45,8 +46,8 @@ const tick = () => {
 			}
 			items.value = feed.items.filter((item) => {
 				if (!item.link) return false;
-				const itemUrl = new URL(item.link, baseUrl);
-				return ['http:', 'https:'].includes(itemUrl.protocol);
+				const itemUrl = tryParseUrl(item.link, baseUrl);
+				return itemUrl != null && ['http:', 'https:'].includes(itemUrl.protocol);
 			});
 			fetching.value = false;
 			key++;
