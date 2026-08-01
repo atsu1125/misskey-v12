@@ -4,6 +4,7 @@ import readNote from '@/services/note/read.js';
 import define from '../../../define.js';
 import { getNote } from '../../../common/getters.js';
 import { ApiError } from '../../../error.js';
+import { isDuplicateKeyValueError } from '@/misc/is-duplicate-key-value-error.js';
 
 export const meta = {
 	tags: ['notes'],
@@ -17,6 +18,11 @@ export const meta = {
 			message: 'No such note.',
 			code: 'NO_SUCH_NOTE',
 			id: '5ff67ada-ed3b-2e71-8e87-a1a421e177d2',
+		},
+		alreadyMuting: {
+			message: 'You are already muting that note.',
+			code: 'ALREADY_MUTING',
+			id: '7e7359cb-160c-4956-b08f-4d1c653cd007',
 		},
 	},
 } as const;
@@ -46,10 +52,17 @@ export default define(meta, paramDef, async (ps, user) => {
 
 	await readNote(user.id, mutedNotes);
 
-	await NoteThreadMutings.insert({
-		id: genId(),
-		createdAt: new Date(),
-		threadId: note.threadId || note.id,
-		userId: user.id,
-	});
+	try {
+		await NoteThreadMutings.insert({
+			id: genId(),
+			createdAt: new Date(),
+			threadId: note.threadId || note.id,
+			userId: user.id,
+		});
+	} catch (e) {
+		if (isDuplicateKeyValueError(e)) {
+			throw new ApiError(meta.errors.alreadyMuting);
+		}
+		throw e;
+	}
 });
