@@ -553,7 +553,7 @@ export async function addFile({
 
 	logger.succ(`drive file has been created ${file.id}`);
 
-	if (user) {
+	if (user && file.userHost === null) {
 		DriveFiles.pack(file, { self: true }).then(packedFile => {
 			// Publish driveFileCreated event
 			publishMainStream(user.id, 'driveFileCreated', packedFile);
