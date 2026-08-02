@@ -120,6 +120,16 @@ function inbox(ctx: Router.RouterContext) {
 		return;
 	}
 
+	const body = ctx.request.body;
+
+	// Reject structurally invalid activities (e.g. missing actor) here instead
+	// of letting them fail deep inside the inbox processor. An actor-less
+	// activity can never be authenticated, so there is no point enqueueing it.
+	if (typeof body !== 'object' || body == null || !('actor' in body) || body.actor == null) {
+		ctx.status = 400;
+		return;
+	}
+
 	const activity = ctx.request.body as IActivity;
 
 	let lazy = false;
