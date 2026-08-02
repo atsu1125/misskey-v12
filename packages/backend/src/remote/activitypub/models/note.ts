@@ -168,12 +168,13 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 	// 添付ファイル
 	// TODO: attachmentは必ずしもImageではない
 	// TODO: attachmentは必ずしも配列ではない
-	// Noteがsensitiveなら添付もsensitiveにする
+	// attachmentにsensitiveフラグがあればそれを使う
+	// attachmentにsensitiveフラグがなくてNoteがsensitiveなら添付もsensitiveにする
 	const limit = promiseLimit(2);
 
 	note.attachment = Array.isArray(note.attachment) ? note.attachment : note.attachment ? [note.attachment] : [];
 	const files = note.attachment
-		.map(attach => attach.sensitive = note.sensitive)
+		.map(attach => attach.sensitive ??= note.sensitive)
 		? (await Promise.all(note.attachment.map(x => limit(() => resolveImage(actor, x)) as Promise<DriveFile>)))
 			.filter(image => image != null)
 		: [];
