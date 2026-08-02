@@ -6,5 +6,7 @@ export default (file: DriveFile) => ({
 	mediaType: file.type,
 	url: DriveFiles.getPublicUrl(file),
 	name: file.comment,
+	width: file.properties?.width,
+	height: file.properties?.height,
 	sensitive: file.isSensitive,
 });
