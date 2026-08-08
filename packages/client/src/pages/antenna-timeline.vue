@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, watch } from 'vue';
+import { computed, inject, watch, provide } from 'vue';
 import XTimeline from '@/components/MkTimeline.vue';
 import { scroll } from '@/scripts/scroll';
 import * as os from '@/os';
@@ -61,6 +61,8 @@ watch(() => props.antennaId, async () => {
 		antennaId: props.antennaId,
 	});
 }, { immediate: true });
+
+provide('currentAntennaPage', $$(antenna));
 
 const headerActions = $computed(() => antenna ? [{
 	icon: 'fas fa-cog',

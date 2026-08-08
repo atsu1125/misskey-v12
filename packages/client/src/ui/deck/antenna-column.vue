@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { onMounted, provide, watch, ref } from 'vue';
 import XColumn from './column.vue';
 import { updateColumn, Column } from './deck-store';
 import XTimeline from '@/components/MkTimeline.vue';
@@ -28,11 +28,21 @@ const emit = defineEmits<{
 
 let timeline = $ref<InstanceType<typeof XTimeline>>();
 
+let currentAntenna = ref<Misskey.entities.Antenna | null>(null);
+
 onMounted(() => {
 	if (props.column.antennaId == null) {
 		setAntenna();
 	}
 });
+
+provide('currentAntennaPage', currentAntenna);
+
+watch(() => props.column.antennaId, async () => {
+	currentAntenna.value = await os.api('antennas/show', {
+		antennaId: props.column.antennaId,
+	});
+}, { immediate: true });
 
 async function setAntenna() {
 	const antennas = await os.api('antennas/list');
