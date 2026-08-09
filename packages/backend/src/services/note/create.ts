@@ -40,6 +40,7 @@ import { Cache } from '@/misc/cache.js';
 import { UserProfile } from '@/models/entities/user-profile.js';
 import { db } from '@/db/postgre.js';
 import { getActiveWebhooks } from '@/misc/webhook-cache.js';
+import { DB_MAX_NOTE_TEXT_LENGTH } from '@/misc/hard-limits.js';
 
 const mutedWordsCache = new Cache<{ userId: UserProfile['userId']; mutedWords: UserProfile['mutedWords']; }[]>(1000 * 60 * 5);
 
@@ -153,6 +154,18 @@ export default async (user: { id: User['id']; username: User['username']; host: 
 	if (data.channel != null) data.visibility = 'public';
 	if (data.channel != null) data.visibleUsers = [];
 	if (data.channel != null) data.localOnly = true;
+
+	// 本文/CW/投票のハードリミット
+	// サロゲートペアは2文字扱い/合字は複数文字扱いでかける
+	if (data.text && data.text.length > DB_MAX_NOTE_TEXT_LENGTH) {
+		throw new Error('text limit exceeded');
+	}
+	if (data.cw && data.cw.length > DB_MAX_NOTE_TEXT_LENGTH) {
+		throw new Error('cw limit exceeded');
+	}
+	if (data.poll && JSON.stringify(data.poll).length > DB_MAX_NOTE_TEXT_LENGTH) {
+		throw new Error('poll limit exceeded');
+	}
 
 	// サイレンス
 	if (user.isSilenced && data.visibility === 'public' && data.channel == null) {

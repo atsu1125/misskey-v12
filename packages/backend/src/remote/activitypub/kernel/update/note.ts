@@ -7,6 +7,7 @@ import DbResolver from '@/remote/activitypub/db-resolver.js';
 import { apLogger } from '../../logger.js';
 import { htmlToMfm } from '../../misc/html-to-mfm.js';
 import { IPost, getApId } from "../../type.js";
+import { DB_MAX_NOTE_TEXT_LENGTH } from '@/misc/hard-limits.js';
 
 const logger = apLogger;
 
@@ -42,17 +43,30 @@ export default async function(actor: IRemoteUser, note: IPost): Promise<string> 
 			return '投稿をUpdateしようとしているユーザーは投稿の作成者ではありません';
 		}
 
-		// validateはinboxのハードリミットでいい
-
 		// テキストのパース
 		const cw = note.summary === '' ? null : note.summary;
+		if (cw && cw.length > DB_MAX_NOTE_TEXT_LENGTH) {
+			return 'skip: cw limit exceeded';
+		}
 		let text: string | null = null;
 		if (note.source?.mediaType === 'text/x.misskeymarkdown' && typeof note.source?.content === 'string') {
+			if (note.source.content.length > DB_MAX_NOTE_TEXT_LENGTH) {
+				return 'skip: note.source.content is too long';
+			}
 			text = note.source.content;
 		} else if (typeof note._misskey_content !== 'undefined') {
+			if (typeof note._misskey_content !== 'string' ||　note._misskey_content.length > DB_MAX_NOTE_TEXT_LENGTH) {
+				return 'skip: note._misskey_content is too long';
+			}
 			text = note._misskey_content;
 		} else if (typeof note.content === 'string') {
+			if (note.content.length > DB_MAX_NOTE_TEXT_LENGTH) {
+				return 'skip: note.content is too long';
+			}
 			text = htmlToMfm(note.content, note.tag);
+			if (text.length > DB_MAX_NOTE_TEXT_LENGTH) {
+				return 'skip: converted note.content is too long';
+			}
 		}
 
 		// Update
