@@ -86,6 +86,7 @@ export async function getJson(url: string, accept = 'application/json, */*', tim
 			Accept: accept,
 		}, headers || {}),
 		timeout,
+    size: 1024 * 256,
 	});
 
 	return await res.json();
