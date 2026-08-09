@@ -45,7 +45,7 @@ export default async function(actor: IRemoteUser, note: IPost): Promise<string> 
 
 		// テキストのパース
 		const cw = note.summary === '' ? null : note.summary;
-		if (cw && cw.length > DB_MAX_NOTE_TEXT_LENGTH) {
+		if (cw && cw.length > 512) {
 			return 'skip: cw limit exceeded';
 		}
 		let text: string | null = null;

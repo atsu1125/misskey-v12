@@ -160,7 +160,7 @@ export default async (user: { id: User['id']; username: User['username']; host: 
 	if (data.text && data.text.length > DB_MAX_NOTE_TEXT_LENGTH) {
 		throw new Error('text limit exceeded');
 	}
-	if (data.cw && data.cw.length > DB_MAX_NOTE_TEXT_LENGTH) {
+	if (data.cw && data.cw.length > 512) {
 		throw new Error('cw limit exceeded');
 	}
 	if (data.poll && JSON.stringify(data.poll).length > DB_MAX_NOTE_TEXT_LENGTH) {
