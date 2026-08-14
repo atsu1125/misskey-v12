@@ -53,6 +53,9 @@
 				</MkKeyValue>
 			</FormSection>
 		</div>
+		<div v-else-if="tab === 'notes' && info" class="_formRoot">
+			<XNotes ref="notes" :pagination="pagination"/>
+		</div>
 		<div v-else-if="tab === 'raw'" class="_formRoot">
 			<MkObjectView v-if="info" tall :value="info">
 			</MkObjectView>
@@ -71,6 +74,7 @@ import MkKeyValue from '@/components/MkKeyValue.vue';
 import FormSection from '@/components/form/section.vue';
 import MkUserCardMini from '@/components/MkUserCardMini.vue';
 import MkInfo from '@/components/MkInfo.vue';
+import XNotes from '@/components/MkNotes.vue';
 import bytes from '@/filters/bytes';
 import * as os from '@/os';
 import { i18n } from '@/i18n';
@@ -112,6 +116,14 @@ async function toggleIsSensitive(v) {
 	isSensitive = v;
 }
 
+const pagination = {
+	endpoint: 'drive/files/attached-notes' as const,
+	params: computed(() => ({
+		fileId: props.fileId,
+	})),
+	limit: 10,
+};
+
 const headerActions = $computed(() => [{
 	text: i18n.ts.openInNewTab,
 	icon: 'fas fa-external-link-alt',
@@ -128,6 +140,10 @@ const headerTabs = $computed(() => [{
 	key: 'ip',
 	title: 'IP',
 	icon: 'fas fa-bars-staggered',
+} : null, iAmModerator ? {
+	key: 'notes',
+	title: 'Notes',
+	icon: 'fas fa-pencil-alt',
 } : null, {
 	key: 'raw',
 	title: 'Raw data',
