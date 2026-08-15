@@ -167,13 +167,13 @@ function unregisterKey(key) {
 
 async function downloadBackupCodes() {
 	await os.alert({
-		text: i18n.ts.download,
+		text: i18n.ts.backupCodesDownloaded,
 	});
 	if (backupCodes.value !== undefined) {
 		const txtBlob = new Blob([backupCodes.value.join('\n')], { type: 'text/plain' });
 		const dummya = document.createElement('a');
 		dummya.href = URL.createObjectURL(txtBlob);
-		dummya.download = `${$i?.username}-2fa-backup-codes.txt`;
+		dummya.download = `${$i?.username}@${hostname}-2fa-backup-codes.txt`;
 		dummya.click();
 	}
 }

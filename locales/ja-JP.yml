@@ -931,6 +931,7 @@ abuseReportResolvers: "通報リゾルバー"
 cancelFollowRequestConfirm: "{name}へのフォロー申請をキャンセルしますか？"
 rejectFollowRequestConfirm: "{name}からのフォロー申請を拒否しますか？"
 removeFromAntenna: "このアンテナから削除"
+backupCodesDownloaded: "バックアップコードをダウンロードします。ダウンロードしたバックアップコードは大切に保管してください。"
 
 _sensitiveMediaDetection:
   description: "機械学習を使って自動でセンシティブなメディアを検出し、モデレーションに役立てることができます。サーバーの負荷が少し増えます。"
