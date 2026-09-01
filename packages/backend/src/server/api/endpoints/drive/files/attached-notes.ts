@@ -55,7 +55,7 @@ export default define(meta, paramDef, async (ps, user) => {
 	}
 
 	const query = makePaginationQuery(Notes.createQueryBuilder('note'), ps.sinceId, ps.untilId);
-	query.andWhere(':file = ANY(note.fileIds)', { file: file.id });
+	query.andWhere(':file <@ note.fileIds', { file: [file.id] });
 
 	const notes = await query
 		.take(ps.limit)

@@ -1,5 +1,6 @@
 import define from '../../define.js';
 import { Users } from '@/models/index.js';
+import { safeForSql } from '@/misc/safe-for-sql.js';
 import { normalizeForSearch } from '@/misc/normalize-for-search.js';
 
 export const meta = {
@@ -32,8 +33,15 @@ export const paramDef = {
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps, me) => {
+	try {
+		if (!safeForSql(normalizeForSearch(ps.tag))) throw 'Injection';
+	} catch (e) {
+		if (e === 'Injection') return [];
+		throw e;
+	}
 	const query = Users.createQueryBuilder('user')
-		.where(':tag = ANY(user.tags)', { tag: normalizeForSearch(ps.tag) });
+		.where(':tag <@ user.tags', { tag: [normalizeForSearch(ps.tag)] })
+		.andWhere('user.isSuspended = FALSE');
 
 	const recent = new Date(Date.now() - (1000 * 60 * 60 * 24 * 5));
 
