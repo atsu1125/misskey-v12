@@ -63,6 +63,7 @@ export default define(meta, paramDef, async (ps, me) => {
 		where: {
 			userId: user.id,
 			replyId: Not(IsNull()),
+			visibility: In(['public', 'home']),
 		},
 		order: {
 			id: -1,
@@ -80,6 +81,7 @@ export default define(meta, paramDef, async (ps, me) => {
 	const replyTargetNotes = await Notes.find({
 		where: {
 			id: In(recentNotes.map(p => p.replyId)),
+			visibility: In(['public', 'home']),
 		},
 		select: ['userId'],
 	});
