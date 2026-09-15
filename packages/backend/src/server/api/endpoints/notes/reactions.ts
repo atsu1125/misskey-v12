@@ -1,8 +1,9 @@
 import { DeepPartial, FindOptionsWhere } from 'typeorm';
-import { NoteReactions } from '@/models/index.js';
+import { NoteReactions, Notes } from '@/models/index.js';
 import { NoteReaction } from '@/models/entities/note-reaction.js';
 import define from '../../define.js';
 import { ApiError } from '../../error.js';
+import { getNote } from '../../common/getters.js';
 
 export const meta = {
 	tags: ['notes', 'reactions'],
@@ -43,8 +44,17 @@ export const paramDef = {
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps, user) => {
+	const note = await getNote(ps.noteId).catch(e => {
+		if (e.id === '9725d0ce-ba28-4dde-95a7-2cbb2c15de24') throw new ApiError(meta.errors.noSuchNote);
+		throw e;
+	});
+
+	if (!(await Notes.isVisibleForMe(note, user ? user.id : null))) {
+		throw new ApiError(meta.errors.noSuchNote);
+	}
+
 	const query = {
-		noteId: ps.noteId,
+		noteId: note.id,
 	} as FindOptionsWhere<NoteReaction>;
 
 	if (ps.type) {
