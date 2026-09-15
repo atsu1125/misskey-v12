@@ -1784,7 +1784,7 @@ bl@^4.0.3:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-bluebird@^3.7.2:
+bluebird@^3.7.2, bluebird@~3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
@@ -2793,6 +2793,13 @@ dotenv@^16.4.7:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.6.1.tgz#773f0e69527a8315c7285d5ee73c4459d20a8020"
   integrity sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==
 
+duplexer2@~0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/duplexer2/-/duplexer2-0.1.4.tgz#8b12dab878c0d69e3e7891051662a32fc6bddcc1"
+  integrity sha1-ixLauHjA1p4+eJEFFmKjL8a93ME=
+  dependencies:
+    readable-stream "^2.0.2"
+
 eastasianwidth@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
@@ -3499,6 +3506,15 @@ fs-constants@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs-constants/-/fs-constants-1.0.0.tgz#6be0de9be998ce16af8afc24497b9ee9b7ccd9ad"
   integrity sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==
 
+fs-extra@11.3.1:
+  version "11.3.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-11.3.1.tgz#ba7a1f97a85f94c6db2e52ff69570db3671d5a74"
+  integrity sha512-eXvGGwZ5CL17ZSwHWd3bbgk7UUpF6IFHtP57NYYakPvHOs8GDgDe5KJI36jIJzDkJ6eJjuzRA8eBQb6SkKue0g==
+  dependencies:
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^2.0.0"
+
 fs-extra@^8.0.1:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
@@ -3789,7 +3805,7 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.4:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graceful-fs@^4.2.0:
+graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.8"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
   integrity sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==
@@ -4697,6 +4713,15 @@ jsonfile@^5.0.0:
   integrity sha512-NQRZ5CRo74MhMMC3/3r5g2k4fjodJ/wh8MxjFbCViWKFjxrnudWSY5vomh+23ZaXzAS7J3fBZIR2dV6WbmfM0w==
   dependencies:
     universalify "^0.1.2"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
+jsonfile@^6.0.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-6.2.1.tgz#b6e31717f22cc37330b081ce0051ed5de53af2f6"
+  integrity sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q==
+  dependencies:
+    universalify "^2.0.0"
   optionalDependencies:
     graceful-fs "^4.1.6"
 
@@ -5622,6 +5647,11 @@ node-gyp@^11.2.0:
     tinyglobby "^0.2.12"
     which "^5.0.0"
 
+node-int64@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
+  integrity sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==
+
 nodemailer@7.0.11:
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-7.0.11.tgz#5f7b06afaec20073cff36bea92d1c7395cc3e512"
@@ -6542,7 +6572,7 @@ re2@1.22.1:
     nan "^2.22.2"
     node-gyp "^11.2.0"
 
-readable-stream@^2.0.0, readable-stream@^2.0.5:
+readable-stream@^2.0.0, readable-stream@^2.0.2, readable-stream@^2.0.5:
   version "2.3.7"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.7.tgz#1eca1cf711aef814c04f62252a36a62f6cb23b57"
   integrity sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
@@ -7039,90 +7069,6 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
-
-slacc-android-arm-eabi@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-android-arm-eabi/-/slacc-android-arm-eabi-0.0.10.tgz#673c4c3d8aca7fd91bc839f72181c9977b301557"
-  integrity sha512-U3dVBuM1m8rT1D/w6S4knJ/uscNwsCR+MKxSQFbgDJEh8Atv+ovuC+FMGuaBT4iOQjpMj5dWSsN3ZPjVeo3hgA==
-
-slacc-android-arm64@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-android-arm64/-/slacc-android-arm64-0.0.10.tgz#f0f1c94e9e573a8b5801434b0cbbd37504aa00ae"
-  integrity sha512-guVp88sW+4j1clTSXMzyDJHG8ondVnd8/FMKXIOfzKCEwSwX3uBxsuyHqtGvXkEwyZAGsBUy13Ei/PZAwElwYA==
-
-slacc-darwin-arm64@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-darwin-arm64/-/slacc-darwin-arm64-0.0.10.tgz#8de6c9b8fdb9c4dc5d931f65aa56e8a25a7f14b7"
-  integrity sha512-633qnOMTP7egvd5IeljAOku0tnxlBXSoCRu7HiT0yeXxN9y5Tbg2X2/FaRzstI36lClfIJ0Lavne4mOw/90z9A==
-
-slacc-darwin-universal@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-darwin-universal/-/slacc-darwin-universal-0.0.10.tgz#63e08f7f80a86479625c68e91754652c0ced2c44"
-  integrity sha512-x5kEqRMTEQTi3NCufPEukWvaWqcOL+7EkP18ZCCiajcWH83jWnT8DOSGOmmLYdrXd0B7ZZcbd8GyLp3i5zu8PA==
-
-slacc-darwin-x64@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-darwin-x64/-/slacc-darwin-x64-0.0.10.tgz#397140767bdacb9c02d005ed5556915fd146ac60"
-  integrity sha512-5gQYboy/4T6Bj3sVXiCpM3EvF1sK/Zx1Nq5YBMUuYb2GzrIwywghHbCD6bK4JYGvNsLN7r4PC45ZUB4gVkU8yA==
-
-slacc-freebsd-x64@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-freebsd-x64/-/slacc-freebsd-x64-0.0.10.tgz#3be44f2d1587fb99762a9953683c18e6bb0a718e"
-  integrity sha512-Jmi5YszELef/aCzYto+LwiNGhCk5mrlJfTJU/pOI91HBbrZlV+aRyIsPCcxAMg5yPsPQuyRljrDouVYrPzNmjw==
-
-slacc-linux-arm-gnueabihf@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-linux-arm-gnueabihf/-/slacc-linux-arm-gnueabihf-0.0.10.tgz#27c9de36a61899540c0523e89c72e7ded39556a2"
-  integrity sha512-9lTM3DGtISQlZYSKrMuQyKCiUnHYRcy04mY6HF1ywYcQ2sqfv3bKEnrypVewepIFUtytlIGzkgpiUAk/ghYGoA==
-
-slacc-linux-arm64-gnu@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-linux-arm64-gnu/-/slacc-linux-arm64-gnu-0.0.10.tgz#feee04840b2de57bee4c8f710113afcca97e7a86"
-  integrity sha512-qXrNWSINXOjHRO3c9idGm8DeOAjAjG1xHY8WiplCoHWgsZf3E7V+sPhWqRUaGQEvftsJg40+cFYREBaLQhpAVQ==
-
-slacc-linux-arm64-musl@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-linux-arm64-musl/-/slacc-linux-arm64-musl-0.0.10.tgz#443a6110eb8edf877ffe30676fd0b3fde7fa5e73"
-  integrity sha512-3lUX7752f6Okn54aONioaA+9M5TvifqXBAart+u2lNXEdWmmh003cVSU2Vcwg7nJ9lLHtju2DkDmKKfJjFuShA==
-
-slacc-linux-x64-gnu@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-linux-x64-gnu/-/slacc-linux-x64-gnu-0.0.10.tgz#d7108ebbc324d76aaeaa8917d9aeece3064e3ac8"
-  integrity sha512-BxxvylF9zlOLRLCpiyMvKTIUpdLlpetNBJ+DSMDh5+Ggq+AmQz2NUGawmcBJw58F8nMCj9TpWLlGNWc2AuY+JQ==
-
-slacc-linux-x64-musl@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-linux-x64-musl/-/slacc-linux-x64-musl-0.0.10.tgz#ac1fe09ac588a454e7ea61ed7c27d7a6fcdb425d"
-  integrity sha512-TYJi8LOtJiTFcZvka4du7bMjF9Bz1RHRwyLnScr5E5yjjgoLRrsvgSu7bxp87xH+rgJ3CdEwE3w3Ux8EiewHpA==
-
-slacc-win32-arm64-msvc@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-win32-arm64-msvc/-/slacc-win32-arm64-msvc-0.0.10.tgz#fd53ddb3a5c5aa8901d55071a2946a7be91e7e73"
-  integrity sha512-1CHPLiDB4exzFyT5ndtJDsRRhBxNg8mGz6I6eJEMjelGkJR2KZPT9LZuby/1bS/bcVOr7zuJvGNfbEGBeHRwPQ==
-
-slacc-win32-x64-msvc@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc-win32-x64-msvc/-/slacc-win32-x64-msvc-0.0.10.tgz#5cde270bfcb2dbbbc7c603ce1c4c64060ef1caff"
-  integrity sha512-wAXBy5yKCAzfYWjVlyPpu6PscD+j4QhCQEy0wZaVuzNyx60HpXWcTZxxVnMR730Y7tfc7cBxSI8NtRb8RguSgg==
-
-slacc@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/slacc/-/slacc-0.0.10.tgz#dfb77a664e2e74d51bc6990ebba02b8587ba888b"
-  integrity sha512-2jgms2/4mLr1AMq4oloAwPdKQK9RQvgmoEpMIxvC+HeHMwCR0XxB7gr/rKo4iLOKJ6gx02mnBU0JHWcTIonpmA==
-  optionalDependencies:
-    slacc-android-arm-eabi "0.0.10"
-    slacc-android-arm64 "0.0.10"
-    slacc-darwin-arm64 "0.0.10"
-    slacc-darwin-universal "0.0.10"
-    slacc-darwin-x64 "0.0.10"
-    slacc-freebsd-x64 "0.0.10"
-    slacc-linux-arm-gnueabihf "0.0.10"
-    slacc-linux-arm64-gnu "0.0.10"
-    slacc-linux-arm64-musl "0.0.10"
-    slacc-linux-x64-gnu "0.0.10"
-    slacc-linux-x64-musl "0.0.10"
-    slacc-win32-arm64-msvc "0.0.10"
-    slacc-win32-x64-msvc "0.0.10"
 
 slash@^3.0.0:
   version "3.0.0"
@@ -7848,10 +7794,26 @@ universalify@^0.1.0, universalify@^0.1.2:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
+universalify@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
+  integrity sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==
+
 unpipe@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
+
+unzipper@0.12.5:
+  version "0.12.5"
+  resolved "https://registry.yarnpkg.com/unzipper/-/unzipper-0.12.5.tgz#7fc6b4862f3832202d1f5cc3adbee2679deaaf6c"
+  integrity sha512-tXYOi9R57Uj/2Z25SOs5RRSzq886MBQj2gY8dPL+xl/kv6s6SvByoKfAtvfVeEuhntWDgjd2o9p2lb4TVPAz0A==
+  dependencies:
+    bluebird "~3.7.2"
+    duplexer2 "~0.1.4"
+    fs-extra "11.3.1"
+    graceful-fs "^4.2.2"
+    node-int64 "^0.4.0"
 
 uri-js@^4.2.2:
   version "4.2.2"
