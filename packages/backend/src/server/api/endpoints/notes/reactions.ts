@@ -9,9 +9,6 @@ export const meta = {
 
 	requireCredential: false,
 
-	allowGet: true,
-	cacheSec: 60,
-
 	res: {
 		type: 'array',
 		optional: false, nullable: false,
