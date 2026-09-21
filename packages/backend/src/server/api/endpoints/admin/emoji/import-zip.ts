@@ -5,7 +5,7 @@ import ms from 'ms';
 export const meta = {
 	secure: true,
 	requireCredential: true,
-	requireModerator: true,
+	requireAdmin: true,
 } as const;
 
 export const paramDef = {
