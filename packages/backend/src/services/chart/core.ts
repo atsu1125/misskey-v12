@@ -10,6 +10,7 @@ import { EntitySchema, Repository, LessThan, Between } from 'typeorm';
 import { dateUTC, isTimeSame, isTimeBefore, subtractTime, addTime } from '@/prelude/time.js';
 import { getChartInsertLock } from '@/misc/app-lock.js';
 import { db } from '@/db/postgre.js';
+import { sqlStringEscape } from '@/misc/sql-string-escape.js';
 
 const logger = new Logger('chart', 'white', process.env.NODE_ENV !== 'test');
 
@@ -410,11 +411,10 @@ export default abstract class Chart<T extends Schema> {
 					if (v < 0) queryForDay[name] = () => `"${name}" - ${Math.abs(v)}`;
 				} else if (Array.isArray(v) && v.length > 0) { // ユニークインクリメント
 					const tempColumnName = uniqueTempColumnPrefix + k.replaceAll('.', columnDot) as keyof TempColumnsForUnique<T>;
-					// TODO: item をSQLエスケープ
-					const itemsForHour = v.filter(item => !logHour[tempColumnName].includes(item)).map(item => `"${item}"`);
-					const itemsForDay = v.filter(item => !logDay[tempColumnName].includes(item)).map(item => `"${item}"`);
-					if (itemsForHour.length > 0) queryForHour[tempColumnName] = () => `array_cat("${tempColumnName}", '{${itemsForHour.join(',')}}'::varchar[])`;
-					if (itemsForDay.length > 0) queryForDay[tempColumnName] = () => `array_cat("${tempColumnName}", '{${itemsForDay.join(',')}}'::varchar[])`;
+					const itemsForHour = v.filter(item => !logHour[tempColumnName].includes(item)).map(item => sqlStringEscape(item));
+					const itemsForDay = v.filter(item => !logDay[tempColumnName].includes(item)).map(item => sqlStringEscape(item));
+					if (itemsForHour.length > 0) queryForHour[tempColumnName] = () => `array_cat("${tempColumnName}", ARRAY[${itemsForHour.join(',')}]::varchar[])`;
+					if (itemsForDay.length > 0) queryForDay[tempColumnName] = () => `array_cat("${tempColumnName}", ARRAY[${itemsForDay.join(',')}]::varchar[])`;
 				}
 			}
 
