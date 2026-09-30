@@ -102,7 +102,7 @@
 		"rndstr": "1.0.0",
 		"rss-parser": "3.12.0",
 		"s-age": "1.1.2",
-		"sanitize-html": "2.17.5",
+		"sanitize-html": "2.17.7",
 		"sharp": "0.35.4",
 		"speakeasy": "2.0.0",
 		"strict-event-emitter-types": "2.0.0",
