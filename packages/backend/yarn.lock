@@ -5659,10 +5659,10 @@ node-int64@^0.4.0:
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
   integrity sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==
 
-nodemailer@7.0.11:
-  version "7.0.11"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-7.0.11.tgz#5f7b06afaec20073cff36bea92d1c7395cc3e512"
-  integrity sha512-gnXhNRE0FNhD7wPSCGhdNh46Hs6nm+uTyg+Kq0cZukNQiYdnCsoQjodNP9BQVG9XrcK/v6/MgpAPBUFyzh9pvw==
+nodemailer@10.0.9:
+  version "10.0.9"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-10.0.9.tgz#1860325627921b3c6e160d941f5d525ff9a8ca1e"
+  integrity sha512-BF0qcyplCwp+jMk6HCjFykBz/YhhZSsxrARhOldLwFWH+8kGjQsd2WIMIZhqEuyXRoGFi0ONbDeWDMDoL8MhLw==
 
 nofilter@^2.0.3:
   version "2.0.3"
