@@ -2,6 +2,8 @@ import { fetchMeta } from '@/misc/fetch-meta.js';
 import { genId } from '@/misc/gen-id.js';
 import { SwSubscriptions } from '@/models/index.js';
 import define from '../../define.js';
+import { ApiError } from '../../error.js';
+import { isValidEndpoint } from '@/services/push-notification.js';
 
 export const meta = {
 	tags: ['account'],
@@ -25,6 +27,14 @@ export const meta = {
 			},
 		},
 	},
+
+	errors: {
+		invalidEndpoint: {
+			message: 'Invalid push endpoint.',
+			code: 'INVALID_ENDPOINT',
+			id: '4432adbe-17c0-4f9f-b43c-9ceb2f8910fe',
+		},
+	},
 } as const;
 
 export const paramDef = {
@@ -39,6 +49,9 @@ export const paramDef = {
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps, user) => {
+	if (!isValidEndpoint(ps.endpoint)) {
+		throw new ApiError(meta.errors.invalidEndpoint);
+	}
 	// if already subscribed
 	const exist = await SwSubscriptions.findOneBy({
 		userId: user.id,

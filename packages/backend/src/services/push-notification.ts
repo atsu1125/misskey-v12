@@ -4,6 +4,7 @@ import { SwSubscriptions } from '@/models/index.js';
 import { fetchMeta } from '@/misc/fetch-meta.js';
 import { Packed } from '@/misc/schema.js';
 import { getNoteSummary } from '@/misc/get-note-summary.js';
+import { getAgentByUrl } from '@/misc/fetch.js';
 
 // Defined also packages/sw/types.ts#L14-L21
 type pushNotificationsTypes = {
@@ -36,6 +37,20 @@ function truncateNotification(notification: Packed<'Notification'>): any {
 	return notification;
 }
 
+export function isValidEndpoint(endpoint: string): boolean {
+	let url: URL;
+	try {
+		url = new URL(endpoint);
+	} catch {
+		return false;
+	}
+
+	if (url.protocol !== 'https:') return false;
+	if (url.username !== '' || url.password !== '') return false;
+
+	return true;
+}
+
 export async function pushNotification<T extends keyof pushNotificationsTypes>(userId: string, type: T, body: pushNotificationsTypes[T]) {
 	const meta = await fetchMeta();
 
@@ -52,6 +67,8 @@ export async function pushNotification<T extends keyof pushNotificationsTypes>(u
 	});
 
 	for (const subscription of subscriptions) {
+		if (!isValidEndpoint(subscription.endpoint)) continue;
+
 		const pushSubscription = {
 			endpoint: subscription.endpoint,
 			keys: {
@@ -66,7 +83,7 @@ export async function pushNotification<T extends keyof pushNotificationsTypes>(u
 			userId,
 			dateTime: (new Date()).getTime(),
 		}), {
-			proxy: config.proxy,
+			agent: getAgentByUrl(new URL(subscription.endpoint)),
 		}).catch((err: any) => {
 			//swLogger.info(err.statusCode);
 			//swLogger.info(err.headers);
