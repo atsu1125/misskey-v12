@@ -1,10 +1,11 @@
 import { publishNoteStream } from '@/services/stream.js';
 import { CacheableUser, User } from '@/models/entities/user.js';
 import { Note } from '@/models/entities/note.js';
-import { PollVotes, NoteWatchings, Polls, Blockings } from '@/models/index.js';
+import { PollVotes, NoteWatchings, Polls, Blockings, Notes } from '@/models/index.js';
 import { Not } from 'typeorm';
 import { genId } from '@/misc/gen-id.js';
 import { createNotification } from '../../create-notification.js';
+import { IdentifiableError } from '@/misc/identifiable-error.js';
 
 export default async function(user: CacheableUser, note: Note, choice: number) {
 	const poll = await Polls.findOneBy({ noteId: note.id });
@@ -23,6 +24,11 @@ export default async function(user: CacheableUser, note: Note, choice: number) {
 		if (block) {
 			throw new Error('blocked');
 		}
+	}
+
+	// check visibility
+	if (!await Notes.isVisibleForMe(note, user.id)) {
+		throw new IdentifiableError('68e9d2d1-48bf-42c2-b90a-b20e09fd3d48', 'Note not accessible for you.');
 	}
 
 	// if already voted
