@@ -51,6 +51,13 @@ export default define(meta, paramDef, async (ps, user) => {
 		}
 	}
 
+	// IS NULL は等値条件扱いされず (userId, folderId, id) インデックスの並びが使われないため、
+	// folderId も ORDER BY に含めて PK スキャンを避ける
+	const idOrder = query.expressionMap.orderBys['file.id'];
+	if (!ps.folderId && typeof idOrder === 'string') {
+		query.orderBy('file.folderId', idOrder).addOrderBy('file.id', idOrder);
+	}
+	
 	const files = await query.take(ps.limit).getMany();
 
 	return await DriveFiles.packMany(files, { detail: false, self: true });
