@@ -4175,9 +4175,9 @@ ini@^1.3.4:
   integrity sha512-iKpRpXP+CrP2jyrxvg1kMUpXDyRUFDWurxbnVT1vQPx+Wz9uCYsMIqYuSBLV+PAaZG/d7kRLKRFc9oDMsH+mFQ==
 
 install-artifact-from-github@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/install-artifact-from-github/-/install-artifact-from-github-1.4.0.tgz#ad705b4ddceb4b820e946f03cd6d34ead98279fb"
-  integrity sha512-+y6WywKZREw5rq7U2jvr2nmZpT7cbWbQQ0N/qfcseYnzHFz2cZz1Et52oY+XttYuYeTkI8Y+R2JNWj68MpQFSg==
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/install-artifact-from-github/-/install-artifact-from-github-1.8.1.tgz#c3f001ca8b44592fb06de592e1bb67f09b72d10e"
+  integrity sha512-lV8dRlR/3i6Tk4X9agaqhMRY6ScVU3YOuKse0VRnP9+rUWfImeCjo1TeAefXEauNVF3a8QgOb6jW3CZJetVopw==
 
 internal-slot@^1.0.3:
   version "1.0.3"
