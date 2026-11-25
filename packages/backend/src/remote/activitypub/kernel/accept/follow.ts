@@ -21,7 +21,7 @@ export default async (actor: CacheableRemoteUser, activity: IFollow): Promise<st
 	// relay
 	const match = activity.id?.match(/follow-relay\/(\w+)/);
 	if (match) {
-		return await relayAccepted(match[1]);
+		return await relayAccepted(match[1], actor);
 	}
 
 	await accept(actor, follower);

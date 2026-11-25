@@ -64,20 +64,22 @@ export async function listRelay() {
 	return relays;
 }
 
-export async function relayAccepted(id: string) {
-	const result = await Relays.update(id, {
-		status: 'accepted',
-	});
-
-	return JSON.stringify(result);
+export async function relayAccepted(id: string, actor: { inbox: string | null; sharedInbox: string | null; }): Promise<string> {
+	return JSON.stringify(await updateRequestingRelayStatus(id, actor, 'accepted'));
 }
 
-export async function relayRejected(id: string) {
-	const result = await Relays.update(id, {
-		status: 'rejected',
-	});
+export async function relayRejected(id: string, actor: { inbox: string | null; sharedInbox: string | null; }): Promise<string> {
+	return JSON.stringify(await updateRequestingRelayStatus(id, actor, 'rejected'));
+}
 
-	return JSON.stringify(result);
+async function updateRequestingRelayStatus(id: string, actor: { inbox: string | null; sharedInbox: string | null; }, status: 'accepted' | 'rejected') {
+	const relay = await Relays.findOneBy({ id });
+	if (relay == null) return { affected: 0 };
+	// 応答してきたのがリレー自身でなければ受け付けない
+	if (actor.inbox !== relay.inbox && actor.sharedInbox !== relay.inbox) return { affected: 0 };
+
+	const result = await Relays.update({ id, status: 'requesting' }, { status });
+	return { affected: result.affected ?? 0 };
 }
 
 export async function isRelayActor(actor: { inbox: string | null; sharedInbox: string | null }): Promise<boolean> {
