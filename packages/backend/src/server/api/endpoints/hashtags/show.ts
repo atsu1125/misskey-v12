@@ -1,7 +1,7 @@
 import define from '../../define.js';
 import { ApiError } from '../../error.js';
 import { Hashtags } from '@/models/index.js';
-import { normalizeForSearch } from '@/misc/normalize-for-search.js';
+import { normalizeTag } from '@/misc/normalize-tag.js';
 
 export const meta = {
 	tags: ['hashtags'],
@@ -26,14 +26,14 @@ export const meta = {
 export const paramDef = {
 	type: 'object',
 	properties: {
-		tag: { type: 'string' },
+		tag: { type: 'string', maxLength: 128 },
 	},
 	required: ['tag'],
 } as const;
 
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps, user) => {
-	const hashtag = await Hashtags.findOneBy({ name: normalizeForSearch(ps.tag) });
+	const hashtag = await Hashtags.findOneBy({ name: normalizeTag(ps.tag) });
 	if (hashtag == null) {
 		throw new ApiError(meta.errors.noSuchHashtag);
 	}

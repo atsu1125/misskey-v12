@@ -1,7 +1,7 @@
 import define from '../../define.js';
 import { Users } from '@/models/index.js';
 import { safeForSql } from '@/misc/safe-for-sql.js';
-import { normalizeForSearch } from '@/misc/normalize-for-search.js';
+import { normalizeTag } from '@/misc/normalize-tag.js';
 
 export const meta = {
 	requireCredential: false,
@@ -22,7 +22,7 @@ export const meta = {
 export const paramDef = {
 	type: 'object',
 	properties: {
-		tag: { type: 'string' },
+		tag: { type: 'string', maxLength: 128 },
 		limit: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
 		sort: { type: 'string', enum: ['+follower', '-follower', '+createdAt', '-createdAt', '+updatedAt', '-updatedAt'] },
 		state: { type: 'string', enum: ['all', 'alive'], default: "all" },
@@ -34,13 +34,13 @@ export const paramDef = {
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async (ps, me) => {
 	try {
-		if (!safeForSql(normalizeForSearch(ps.tag))) throw 'Injection';
+		if (!safeForSql(normalizeTag(ps.tag))) throw 'Injection';
 	} catch (e) {
 		if (e === 'Injection') return [];
 		throw e;
 	}
 	const query = Users.createQueryBuilder('user')
-		.where(':tag <@ user.tags', { tag: [normalizeForSearch(ps.tag)] })
+		.where(':tag <@ user.tags', { tag: [normalizeTag(ps.tag)] })
 		.andWhere('user.isSuspended = FALSE');
 
 	const recent = new Date(Date.now() - (1000 * 60 * 60 * 24 * 5));

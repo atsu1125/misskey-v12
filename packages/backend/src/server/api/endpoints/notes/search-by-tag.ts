@@ -1,7 +1,7 @@
 import { Brackets } from 'typeorm';
 import { Notes } from '@/models/index.js';
 import { safeForSql } from '@/misc/safe-for-sql.js';
-import { normalizeForSearch } from '@/misc/normalize-for-search.js';
+import { normalizeTag } from '@/misc/normalize-tag.js';
 import define from '../../define.js';
 import { makePaginationQuery } from '../../common/make-pagination-query.js';
 import { generateMutedUserQuery } from '../../common/generate-muted-user-query.js';
@@ -41,7 +41,7 @@ export const paramDef = {
 	anyOf: [
 		{
 			properties: {
-				tag: { type: 'string', minLength: 1 },
+				tag: { type: 'string', minLength: 1, maxLength: 128 },
 			},
 			required: ['tag'],
 		},
@@ -55,6 +55,7 @@ export const paramDef = {
 						items: {
 							type: 'string',
 							minLength: 1,
+							maxLength: 128,
 						},
 						minItems: 1,
 					},
@@ -88,15 +89,15 @@ export default define(meta, paramDef, async (ps, me) => {
 
 	try {
 		if (ps.tag) {
-			if (!safeForSql(normalizeForSearch(ps.tag))) throw 'Injection';
-			query.andWhere(':tag <@ note.tags', { tag: [normalizeForSearch(ps.tag)] });
+			if (!safeForSql(normalizeTag(ps.tag))) throw 'Injection';
+			query.andWhere(':tag <@ note.tags', { tag: [normalizeTag(ps.tag)] });
 		} else {
 			query.andWhere(new Brackets(qb => {
 				for (const tags of ps.query!) {
 					qb.orWhere(new Brackets(qb => {
 						for (const tag of tags) {
-							if (!safeForSql(normalizeForSearch(tag))) throw 'Injection';
-							qb.andWhere(':tag <@ note.tags', { tag: [normalizeForSearch(tag)] });
+							if (!safeForSql(normalizeTag(tag))) throw 'Injection';
+							qb.andWhere(':tag <@ note.tags', { tag: [normalizeTag(tag)] });
 						}
 					}));
 				}

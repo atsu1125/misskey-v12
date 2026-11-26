@@ -4,7 +4,7 @@ import { fetchMeta } from '@/misc/fetch-meta.js';
 import { Notes } from '@/models/index.js';
 import { Note } from '@/models/entities/note.js';
 import { safeForSql } from '@/misc/safe-for-sql.js';
-import { normalizeForSearch } from '@/misc/normalize-for-search.js';
+import { normalizeTag } from '@/misc/normalize-tag.js';
 
 /*
 トレンドに載るためには「『直近a分間のユニーク投稿数が今からa分前～今からb分前の間のユニーク投稿数のn倍以上』のハッシュタグの上位5位以内に入る」ことが必要
@@ -64,7 +64,7 @@ export const paramDef = {
 // eslint-disable-next-line import/no-default-export
 export default define(meta, paramDef, async () => {
 	const instance = await fetchMeta(true);
-	const hiddenTags = instance.hiddenTags.map(t => normalizeForSearch(t));
+	const hiddenTags = instance.hiddenTags.map(t => normalizeTag(t));
 
 	const now = new Date(); // 5分単位で丸めた現在日時
 	now.setMinutes(Math.round(now.getMinutes() / 5) * 5, 0, 0);

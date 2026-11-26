@@ -3,7 +3,7 @@ import { Hashtags, Users } from '@/models/index.js';
 import { hashtagChart } from '@/services/chart/index.js';
 import { genId } from '@/misc/gen-id.js';
 import { Hashtag } from '@/models/entities/hashtag.js';
-import { normalizeForSearch } from '@/misc/normalize-for-search.js';
+import { normalizeTag } from '@/misc/normalize-tag.js';
 
 export async function updateHashtags(user: { id: User['id']; host: User['host']; }, tags: string[]) {
 	for (const tag of tags) {
@@ -22,7 +22,7 @@ export async function updateUsertags(user: User, tags: string[]) {
 }
 
 export async function updateHashtag(user: { id: User['id']; host: User['host']; }, tag: string, isUserAttached = false, inc = true) {
-	tag = normalizeForSearch(tag);
+	tag = normalizeTag(tag);
 
 	const index = await Hashtags.findOneBy({ name: tag });
 
